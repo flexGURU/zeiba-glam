@@ -1,0 +1,9 @@
+[
+  { "name": "Abayas", "image": "assets/images/categories/images/abayas.jpg" },
+  { "name": "Dresses", "image": "assets/images/categories/images/dresses.jpg" },
+  { "name": "Pants", "image": "assets/images/categories/images/pants.jpg" },
+  { "name": "Blouses", "image": "assets/images/categories/images/blouses.jpg" },
+  { "name": "Scarves", "image": "assets/images/categories/images/scarves.jpg" },
+  { "name": "Handbags", "image": "assets/images/categories/images/handbags.jpg" },
+  { "name": "Shoes", "image": "assets/images/categories/images/shoes.jpg" }
+]

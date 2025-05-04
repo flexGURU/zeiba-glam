@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+body {
+  font-family: "Lexend", sans-serif;
+}
+
+.input {
+  @apply bg-white p-3 text-slate-500 focus:outline-none;
+}
+
+.btn-purple-prim {
+  @apply bg-purple-600 hover:bg-purple-700 px-5 py-3 transition-colors flex items-center;
+}
