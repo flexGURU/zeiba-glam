@@ -8,61 +8,21 @@ import {
   ProductCategory,
   ProductService,
 } from '../../../core/services/product.service';
+import { NewArrivalComponent } from '../../product/new-arrival/new-arrival.component';
+import { ProductCategoryComponent } from '../../product/product-category/product-category.component';
+import { LandingComponent } from "../landing/landing.component";
 @Component({
   selector: 'app-homepage',
-  imports: [ProductListComponent, CarouselModule, RouterLink, CommonModule],
+  imports: [
+    ProductListComponent,
+    CarouselModule,
+    RouterLink,
+    CommonModule,
+    NewArrivalComponent,
+    ProductCategoryComponent,
+    LandingComponent
+],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
 })
-export class HomepageComponent {
-  newArrivals: Product[] = [];
-  categories: ProductCategory[] = [];
-  constructor(private productService: ProductService) {}
-
-  ngOnInit() {
-    this.loadNewArrivals();
-    this.loadCategories();
-  }
-
-  carouselResponsiveOptions = [
-    {
-      breakpoint: '1024px',
-      numVisible: 3,
-      numScroll: 1,
-    },
-    {
-      breakpoint: '768px',
-      numVisible: 2,
-      numScroll: 1,
-    },
-    {
-      breakpoint: '560px',
-      numVisible: 1,
-      numScroll: 1,
-    },
-  ];
-
-  loadNewArrivals(): void {
-    this.productService.getNewArrivals().subscribe({
-      next: (products) => {
-        this.newArrivals = products.slice(0, 8);
-      },
-      error: (error) => {
-        console.error('Error loading new arrivals:', error);
-      },
-    });
-  }
-
-  loadCategories(): void {
-    this.productService.getProductCategories().subscribe({
-      next: (categories) => {
-        console.log(categories);
-
-        this.categories = categories;
-      },
-      error: (error) => {
-        console.error('Error loading categories:', error);
-      },
-    });
-  }
-}
+export class HomepageComponent {}

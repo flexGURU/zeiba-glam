@@ -5,7 +5,7 @@
     "price": 149.99,
     "category": "abayas",
     "subcategory": "formal",
-    "color": "black",
+    "colorss": ["bla]ck"],
     "sizes": ["S", "M", "L", "XL"],
     "image": "assets/images/products/abaya-royal-black.jpg",
     "gallery": "assets/images/categories/images/abayas.jpg",
@@ -23,7 +23,7 @@
     "price": 129.99,
     "category": "abayas",
     "subcategory": "casual",
-    "color": "navy",
+    "colors": ["navy"],
     "sizes": ["S", "M", "L", "XL", "XXL"],
     "image": "assets/images/categories/images/abayas.jpg",
     "gallery": ["assets/images/categories/images/abayas.jpg"],
@@ -41,7 +41,7 @@
     "price": 89.99,
     "category": "dresses",
     "subcategory": "maxi",
-    "color": "emerald",
+    "colors": ["green"],
     "sizes": ["S", "M", "L"],
     "image": "assets/images/products/dress-pleated-emerald.jpg",
     "gallery": [
@@ -62,7 +62,7 @@
     "price": 69.99,
     "category": "pants",
     "subcategory": "palazzo",
-    "color": "beige",
+    "colors": ["beige"],
     "sizes": ["S", "M", "L", "XL"],
     "image": "assets/images/products/pants-palazzo-beige.jpg",
     "gallery": [
@@ -83,7 +83,7 @@
     "price": 59.99,
     "category": "blouses",
     "subcategory": "formal",
-    "color": "cream",
+    "colors": ["cream"],
     "sizes": ["S", "M", "L"],
     "image": "assets/images/categories/images/blouses.jpg",
     "gallery": [
@@ -104,7 +104,7 @@
     "price": 45.99,
     "category": "scarves",
     "subcategory": "silk",
-    "color": "multicolor",
+    "colors": ["multicolors"],
     "sizes": ["One Size"],
     "image": "assets/images/products/scarf-silk-floral.jpg",
     "gallery": [
@@ -125,7 +125,7 @@
     "price": 119.99,
     "category": "handbags",
     "subcategory": "tote",
-    "color": "burgundy",
+    "colors": ["burgundy"],
     "sizes": ["One Size"],
     "image": "assets/images/categories/images/handbags.jpg",
     "gallery": [
@@ -146,7 +146,7 @@
     "price": 89.99,
     "category": "shoes",
     "subcategory": "heels",
-    "color": "taupe",
+    "colors": ["taupe"],
     "sizes": ["36", "37", "38", "39", "40", "41"],
     "image": "assets/images/products/shoes-block-taupe.jpg",
     "gallery": [
@@ -167,7 +167,7 @@
     "price": 159.99,
     "category": "abayas",
     "subcategory": "formal",
-    "color": "dusty rose",
+    "colors": ["dusty rose"],
     "sizes": ["S", "M", "L", "XL"],
     "image": "assets/images/categories/images/abayas.jpg",
     "gallery": [
@@ -188,7 +188,7 @@
     "price": 79.99,
     "category": "handbags",
     "subcategory": "crossbody",
-    "color": "black",
+    "colors": ["black"],
     "sizes": ["One Size"],
     "image": "assets/images/products/handbag-chain-black.jpg",
     "gallery": [
@@ -209,7 +209,7 @@
     "price": 199.99,
     "category": "dresses",
     "subcategory": "evening",
-    "color": "navy",
+    "colors": ["navy"],
     "sizes": ["S", "M", "L", "XL"],
     "image": "assets/images/categories/images/dresses.jpg",
     "gallery": [
@@ -230,7 +230,7 @@
     "price": 75.99,
     "category": "shoes",
     "subcategory": "flats",
-    "color": "tan",
+    "colors": ["tan"],
     "sizes": ["36", "37", "38", "39", "40"],
     "image": "assets/images/products/shoes-loafer-tan.jpg",
     "gallery": [

@@ -13,7 +13,7 @@
       class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
     >
       <!-- Sort -->
-      <div class="w-full md:w-auto">
+      <!-- <div class="w-full md:w-auto">
         <p-select
           [options]="sortOptions"
           [(ngModel)]="selectedSortOption"
@@ -22,11 +22,11 @@
           [style]="{ 'min-width': '200px' }"
           styleClass="w-full md:w-auto"
         ></p-select>
-      </div>
+      </div> -->
 
       <!-- View Toggle -->
       <div class="flex gap-2">
-        <button
+        <!-- <button
           (click)="viewMode = 'grid'"
           [ngClass]="{
             'bg-purple-600 text-white': viewMode === 'grid',
@@ -35,8 +35,8 @@
           class="p-2 transition-colors"
         >
           <i class="pi pi-th-large"></i>
-        </button>
-        <button
+        </button> -->
+        <!-- <button
           (click)="viewMode = 'list'"
           [ngClass]="{
             'bg-purple-600 text-white': viewMode === 'list',
@@ -45,7 +45,7 @@
           class="p-2 transition-colors"
         >
           <i class="pi pi-list"></i>
-        </button>
+        </button> -->
       </div>
 
       <!-- Filter Button (Mobile) -->
@@ -92,7 +92,7 @@
               *ngFor="let color of availableColors"
               (click)="toggleColorFilter(color)"
               [ngClass]="{
-                'border-2 border-purple-600': selectedColors.includes(color)
+                'border-2 border-purple-600': selectedColors().includes(color)
               }"
               class="w-6 h-6 cursor-pointer"
               [style]="{ 'background-color': color }"
@@ -108,8 +108,8 @@
               *ngFor="let size of availableSizes"
               (click)="toggleSizeFilter(size)"
               [ngClass]="{
-                'bg-purple-600 text-white': selectedSizes.includes(size),
-                'bg-gray-200 text-gray-700': !selectedSizes.includes(size)
+                'bg-purple-600 text-white': selectedSizes().includes(size),
+                'bg-gray-200 text-gray-700': !selectedSizes().includes(size)
               }"
               class="px-3 py-1 text-sm cursor-pointer transition-colors"
             >
@@ -138,7 +138,7 @@
           </button>
         </div>
         <div
-          *ngFor="let color of selectedColors"
+          *ngFor="let color of selectedColors()"
           class="bg-gray-100 text-gray-800 text-sm px-2 py-1 flex items-center gap-1"
         >
           <span
@@ -154,7 +154,7 @@
           </button>
         </div>
         <div
-          *ngFor="let size of selectedSizes"
+          *ngFor="let size of selectedSizes()"
           class="bg-gray-100 text-gray-800 text-sm px-2 py-1 flex items-center gap-1"
         >
           Size: {{ size }}
@@ -210,15 +210,30 @@
   >
     <div
       *ngFor="let product of filteredProducts"
-      class="bg-gray-100 overflow-hidden shadow hover:shadow-md transition-shadow"
+      class="bg-gray-100 overflow-hidden shadow hover: transition-all duration-300 rounded-sm relative group"
     >
       <a [routerLink]="['/product', product.id]" class="block">
-        <div class="aspect-[3/4] overflow-hidden">
+        <div class="aspect-[3/4] overflow-hidden relative">
           <img
             [src]="product.image"
             [alt]="product.name"
-            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover group-hover:opacity-65 group-hover:scale-105 transition-transform duration-500"
           />
+          <!-- Overlay with Quick View button that appears on hover -->
+          <div
+            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <button
+              (click)="
+                quickView(product);
+                $event.preventDefault();
+                $event.stopPropagation()
+              "
+              class="bg-white text-purple-600 hover:bg-purple-600 hover:text-white px-4 py-2 font-medium transition-colors duration-300 flex items-center gap-2 rounded-sm"
+            >
+              <i class="pi pi-eye"></i> Quick View
+            </button>
+          </div>
         </div>
         <div class="p-4">
           <h3 class="font-medium text-gray-800 mb-1 truncate">
@@ -227,25 +242,29 @@
           <p class="text-purple-600 font-bold">
             ${{ product.price.toFixed(2) }}
           </p>
+          <!-- Small "Add to Cart" icon that appears on hover -->
+          <div
+            class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <button
+              (click)="
+                addToCart(product);
+                $event.preventDefault();
+                $event.stopPropagation()
+              "
+              class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-md transition-colors"
+              title="Add to Cart"
+            >
+              <i class="pi pi-shopping-cart"></i>
+            </button>
+          </div>
         </div>
       </a>
-      <div class="px-4 pb-4">
-        <button
-          (click)="
-            addToCart(product);
-            $event.preventDefault();
-            $event.stopPropagation()
-          "
-          class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 transition-colors flex items-center justify-center gap-2"
-        >
-          <i class="pi pi-shopping-cart"></i> Add to Cart
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Product List View -->
-  <div
+  <!-- <div
     *ngIf="!loading && filteredProducts.length > 0 && viewMode === 'list'"
     class="space-y-4"
   >
@@ -295,7 +314,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Pagination -->
   <div
@@ -359,11 +378,11 @@
       </div>
 
       <!-- Size Selection -->
-      <div
+      <!-- <div
         *ngIf="selectedProduct.sizes && selectedProduct.sizes.length > 0"
         class="mb-6"
       >
-        <h3 class="font-medium mb-2">Size</h3>
+        <h3 class="font-medium mb-2">Sizeer</h3>
         <div class="flex gap-2">
           <div
             *ngFor="let size of selectedProduct.sizes"
@@ -377,7 +396,7 @@
             {{ size }}
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Quantity -->
       <div class="mb-6">

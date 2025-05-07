@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem, SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
@@ -36,6 +36,7 @@ export class ProductListComponent {
   category: string = '';
   categoryTitle: string = 'All Products';
   products: Product[] = [];
+
   filteredProducts: Product[] = [];
   totalFilteredProducts: number = 0;
 
@@ -60,9 +61,9 @@ export class ProductListComponent {
     'beige',
     'brown',
   ];
-  selectedColors: string[] = [];
+  selectedColors = signal<string[]>([]);
   availableSizes: string[] = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-  selectedSizes: string[] = [];
+  selectedSizes = signal<string[]>([]);
 
   // Sort Options
   sortOptions: SelectItem[] = [];
@@ -130,23 +131,9 @@ export class ProductListComponent {
   loadProducts(): void {
     this.loading = true;
 
-    if (this.category === 'new-arrivals') {
-      this.productService
-        .getNewArrivals()
-        .subscribe(this.handleProductsResponse.bind(this));
-    } else if (this.category === 'best-sellers') {
-      this.productService
-        .getBestSellers()
-        .subscribe(this.handleProductsResponse.bind(this));
-    } else if (this.category) {
-      this.productService
-        .getProductsByCategory(this.category)
-        .subscribe(this.handleProductsResponse.bind(this));
-    } else {
-      this.productService
-        .getAllProducts()
-        .subscribe(this.handleProductsResponse.bind(this));
-    }
+    this.productService
+      .getAllProducts()
+      .subscribe(this.handleProductsResponse.bind(this));
   }
 
   handleProductsResponse(products: Product[]): void {
@@ -164,18 +151,19 @@ export class ProductListComponent {
     );
 
     // Apply color filter if any selected
-    if (this.selectedColors.length > 0) {
+    if (this.selectedColors().length > 0) {
       result = result.filter((p) => {
-        return p.colors?.some((color) => this.selectedColors.includes(color));
+        return p.colors?.some((color) => this.selectedColors().includes(color));
       });
     }
 
     // Apply size filter if any selected
-    if (this.selectedSizes.length > 0) {
-      result = result.filter((p) =>
-        p.sizes?.some((size) => this.selectedSizes.includes(size))
-      );
+    if (this.selectedSizes().length > 0) {
+      result = result.filter((p) => {
+        return p.sizes?.some((size) => this.selectedSizes().includes(size));
+      });
     }
+    console.log('result', result);
 
     // Apply sorting
     this.applySorting(result);
@@ -210,34 +198,30 @@ export class ProductListComponent {
     }
   }
 
-  onSortChange(): void {
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
   onPageChange(event: any): void {
     this.currentPage = event.page + 1;
     this.pageSize = event.rows;
     this.applyFilters();
   }
-
   toggleColorFilter(color: string): void {
-    const index = this.selectedColors.indexOf(color);
-    if (index === -1) {
-      this.selectedColors.push(color);
+    const currentColors = this.selectedColors();
+
+    if (!currentColors.includes(color)) {
+      this.selectedColors.update((colors) => [...colors, color]);
     } else {
-      this.selectedColors.splice(index, 1);
+      this.selectedColors.update((colors) => colors.filter((c) => c !== color));
     }
     this.currentPage = 1;
     this.applyFilters();
   }
 
   toggleSizeFilter(size: string): void {
-    const index = this.selectedSizes.indexOf(size);
-    if (index === -1) {
-      this.selectedSizes.push(size);
+    const currentSizes = this.selectedSizes();
+
+    if (!currentSizes.includes(size)) {
+      this.selectedSizes.update((selectedSizes) => [...selectedSizes, size]);
     } else {
-      this.selectedSizes.splice(index, 1);
+      this.selectedSizes.update((sizes) => sizes.filter((s) => s !== size));
     }
     this.currentPage = 1;
     this.applyFilters();
@@ -251,8 +235,8 @@ export class ProductListComponent {
 
   clearAllFilters(): void {
     this.priceRange = [0, 1000];
-    this.selectedColors = [];
-    this.selectedSizes = [];
+    this.selectedColors.set([]);
+    this.selectedSizes.set([]);
     this.currentPage = 1;
     this.applyFilters();
   }

@@ -6,7 +6,7 @@ import { Menubar } from 'primeng/menubar';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterLink, Menubar],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -20,15 +20,14 @@ export class HeaderComponent {
     'Handbags',
     'Shoes',
   ];
-  mobileMenuOpen: boolean = false;
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
   cartItemCount: number = 0;
 
   navbarContent = [
-    {
-      label: 'Home',
-      icon: 'pi pi-home',
-      routerLink: '/home',
-    },
     {
       label: 'Shop',
       icon: 'pi pi-shopping-bag',
