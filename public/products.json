@@ -83,7 +83,7 @@
     "price": 59.99,
     "category": "blouses",
     "subcategory": "formal",
-    "colors": ["cream"],
+    "colors": ["white","green"],
     "sizes": ["S", "M", "L"],
     "image": "assets/images/categories/images/blouses.jpg",
     "gallery": [

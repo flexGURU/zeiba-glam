@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { TabsModule } from 'primeng/tabs';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
+import { ProductRelatedComponent } from '../../product-related/product-related.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -26,7 +27,9 @@ import { ButtonModule } from 'primeng/button';
     TooltipModule,
     FormsModule,
     TabsModule,
-    TabViewModule, ButtonModule
+    TabViewModule,
+    ButtonModule,
+    ProductRelatedComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
