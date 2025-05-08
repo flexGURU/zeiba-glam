@@ -210,9 +210,9 @@
   >
     <div
       *ngFor="let product of filteredProducts"
-      class="bg-gray-100 overflow-hidden shadow hover: transition-all duration-300 rounded-sm relative group"
+      class="bg-gray-100 overflow-hidden shadow hover: transition-all duration-300 relative group"
     >
-      <a [routerLink]="['/product', product.id]" class="block">
+      <a [routerLink]="['/product']" class="block">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img
             [src]="product.image"
@@ -229,9 +229,9 @@
                 $event.preventDefault();
                 $event.stopPropagation()
               "
-              class="bg-white text-purple-600 hover:bg-purple-600 hover:text-white px-4 py-2 font-medium transition-colors duration-300 flex items-center gap-2 rounded-sm"
+              class="btn-purple-prim"
             >
-              <i class="pi pi-eye"></i> Quick View
+              <i class="pi pi-eye mr-2"></i> Quick View
             </button>
           </div>
         </div>
@@ -242,79 +242,10 @@
           <p class="text-purple-600 font-bold">
             KES{{ product.price.toFixed(2) }}
           </p>
-          <!-- Small "Add to Cart" icon that appears on hover -->
-          <div
-            class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            <button
-              (click)="
-                addToCart(product);
-                $event.preventDefault();
-                $event.stopPropagation()
-              "
-              class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-md transition-colors"
-              title="Add to Cart"
-            >
-              <i class="pi pi-shopping-cart"></i>
-            </button>
-          </div>
         </div>
       </a>
     </div>
   </div>
-
-  <!-- Product List View -->
-  <!-- <div
-    *ngIf="!loading && filteredProducts.length > 0 && viewMode === 'list'"
-    class="space-y-4"
-  >
-    <div
-      *ngFor="let product of filteredProducts"
-      class="overflow-hidden shadow hover:shadow-md transition-shadow p-4 flex flex-col md:flex-row gap-4 bg-gray-100"
-    >
-      <a
-        [routerLink]="['/product', product.id]"
-        class="block md:w-1/4 lg:w-1/5"
-      >
-        <div class="aspect-square overflow-hidden">
-          <img
-            [src]="product.image"
-            [alt]="product.name"
-            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      </a>
-      <div class="md:w-3/4 lg:w-4/5 flex flex-col justify-between">
-        <div>
-          <a [routerLink]="['/product', product.id]" class="block">
-            <h3 class="font-medium text-xl text-gray-800 mb-2">
-              {{ product.name }}
-            </h3>
-          </a>
-          <p class="text-purple-600 font-bold text-xl mb-2">
-            ${{ product.price.toFixed(2) }}
-          </p>
-          <p class="text-gray-600 mb-4 line-clamp-2">
-            {{ product.description }}
-          </p>
-        </div>
-        <div class="flex items-center gap-4">
-          <button
-            (click)="addToCart(product)"
-            class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 transition-colors flex items-center gap-2"
-          >
-            <i class="pi pi-shopping-cart"></i> Add to Cart
-          </button>
-          <button
-            (click)="quickView(product)"
-            class="bg-gray-300 hover:bg-gray-300 text-gray-900 px-4 py-2 transition-colors cursor-pointer"
-          >
-            Quick View
-          </button>
-        </div>
-      </div>
-    </div>
-  </div> -->
 
   <!-- Pagination -->
   <div
@@ -332,94 +263,7 @@
 </div>
 
 <!-- Quick View Dialog -->
-<p-dialog
-  [(visible)]="quickViewVisible"
-  [style]="{ width: '90%', maxWidth: '800px' }"
-  [modal]="true"
-  [draggable]="true"
-  [resizable]="true"
-  [closeOnEscape]="true"
-  styleClass="p-0 border"
->
-  <ng-template pTemplate="header">
-    <h2 class="text-xl font-semibold">{{ selectedProduct?.name }}</h2>
-  </ng-template>
-  <div *ngIf="selectedProduct" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <img
-        [src]="selectedProduct.image"
-        [alt]="selectedProduct.name"
-        class="w-full h-auto object-cover"
-      />
-    </div>
-    <div>
-      <p class="text-purple-600 font-bold text-2xl mb-4">
-        KES{{ selectedProduct.price.toFixed(2) }}
-      </p>
-      <p class="text-gray-600 mb-6">{{ selectedProduct.description }}</p>
-
-      <!-- Color Selection -->
-      <div
-        *ngIf="selectedProduct.colors && selectedProduct.colors.length > 0"
-        class="mb-4"
-      >
-        <h3 class="font-medium mb-2">Color</h3>
-        <div class="flex gap-2">
-          <div
-            *ngFor="let color of selectedProduct.colors"
-            (click)="selectedColor = color"
-            [ngClass]="{
-              'border-2 border-purple-600': selectedColor === color
-            }"
-            class="w-8 h-8 cursor-pointer"
-            [style]="{ 'background-color': color }"
-          ></div>
-        </div>
-      </div>
-
-      <!-- Size Selection -->
-      <!-- <div
-        *ngIf="selectedProduct.sizes && selectedProduct.sizes.length > 0"
-        class="mb-6"
-      >
-        <h3 class="font-medium mb-2">Sizeer</h3>
-        <div class="flex gap-2">
-          <div
-            *ngFor="let size of selectedProduct.sizes"
-            (click)="selectedSize = size"
-            [ngClass]="{
-              'bg-purple-600 text-white': selectedSize === size,
-              'bg-gray-200 text-gray-700': selectedSize !== size
-            }"
-            class="px-4 py-2 cursor-pointer transition-colors"
-          >
-            {{ size }}
-          </div>
-        </div>
-      </div> -->
-
-      <!-- Quantity -->
-      <div class="mb-6">
-        <h3 class="font-medium mb-2">Quantity</h3>
-        <p-inputNumber
-          [(ngModel)]="selectedQuantity"
-          [showButtons]="true"
-          [min]="1"
-          [max]="selectedProduct.stock || 10"
-          buttonLayout="horizontal"
-          spinnerMode="horizontal"
-          inputStyleClass="text-center"
-          decrementButtonClass="p-button-secondary"
-          incrementButtonClass="p-button-secondary"
-        ></p-inputNumber>
-      </div>
-
-      <button
-        (click)="addToCart(selectedProduct, selectedQuantity)"
-        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 transition-colors flex items-center justify-center gap-2"
-      >
-        <i class="pi pi-shopping-cart"></i> Add to Cart
-      </button>
-    </div>
-  </div>
-</p-dialog>
+<app-product-preview
+  [selectedProduct]="selectedProduct"
+  [(quickViewVisible)]="quickViewVisible"
+></app-product-preview>

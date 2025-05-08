@@ -13,6 +13,7 @@ import {
   Product,
   ProductService,
 } from '../../../core/services/product.service';
+import { ProductPreviewComponent } from '../product-preview/product-preview.component';
 
 @Component({
   selector: 'app-product-list',
@@ -27,6 +28,7 @@ import {
     DialogModule,
     InputNumberModule,
     FormsModule,
+    ProductPreviewComponent,
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',

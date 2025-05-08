@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   category: string;
@@ -43,7 +43,7 @@ export class ProductService {
     return category.pipe(catchError(this.handleError));
   }
 
-  getProductById(id: number): Observable<Product> {
+  getProductById(id: string): Observable<Product> {
     return this.getAllProducts().pipe(
       map((products) => {
         const product = products.find((p) => p.id === id);

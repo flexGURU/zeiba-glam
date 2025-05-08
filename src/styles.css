@@ -10,7 +10,7 @@ body {
 }
 
 .btn-purple-prim {
-  @apply bg-purple-600 hover:bg-purple-700 p-6 transition-colors flex items-center text-white;
+  @apply bg-purple-600 cursor-pointer hover:bg-purple-700 p-3 transition-colors flex justify-center items-center text-white;
 }
 
 .btn-white-prim {
@@ -19,4 +19,16 @@ body {
 
 .btn-white-prim:hover {
   @apply bg-black text-white;
+}
+
+::ng-deep .square-dialog .p-dialog-content,
+::ng-deep .square-dialog .p-dialog-header,
+::ng-deep .square-dialog .p-dialog-footer,
+::ng-deep .square-dialog {
+  border-radius: 0 !important;
+}
+
+/* If you want to remove borders entirely */
+::ng-deep .square-dialog {
+  border: none !important;
 }
