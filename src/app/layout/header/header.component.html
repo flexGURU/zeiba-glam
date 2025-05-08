@@ -2,9 +2,32 @@
   <!-- Top Bar - Mobile: Logo, Cart, Menu | Desktop: Logo, Search, Cart -->
   <!-- First Row - Logo, Cart & Menu Toggle (always visible) -->
   <div class="flex flex-row items-center justify-center gap-4 md:gap-8 md:p-4">
-    <button class="sm:hidden text-gray-700">
+    <button class="sm:hidden text-gray-700" (click)="isMenuOpen = true">
       <i class="pi pi-bars text-2xl"></i>
     </button>
+    <p-drawer [(visible)]="isMenuOpen">
+      <div class="">
+        <nav class="flex-grow">
+          <ul class="flex flex-col justify-center gap-4">
+            <li *ngFor="let item of navbarContent">
+              <a
+                href="#"
+                class="flex items-center whitespace-nowrap px-3 py-2 text-sm font-medium text-gray-700 hover:text-purple-700 relative group"
+              >
+                <i
+                  [class]="item.icon"
+                  class="mr-2 text-purple-500 group-hover:text-pink-500 transition-colors"
+                ></i>
+                <span>{{ item.label }}</span>
+                <span
+                  class="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"
+                ></span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </p-drawer>
     <!-- Logo -->
     <a href="/" class="text-center">
       <h1

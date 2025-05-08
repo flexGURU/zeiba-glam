@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
-import { Menubar } from 'primeng/menubar';
+import { DrawerModule } from 'primeng/drawer';
+
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DrawerModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
