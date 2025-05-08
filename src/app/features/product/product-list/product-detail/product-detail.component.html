@@ -108,9 +108,7 @@
       <div class="mb-6">
         <h3 class="font-semibold text-gray-700 mb-2">Availability</h3>
         <p class="text-green-600" *ngIf="product.stock && product.stock > 10">
-          <i class="pi pi-check-circle mr-2"></i> In Stock ({{
-            product.stock
-          }}
+          <i class="pi pi-check-circle mr-2"></i> In Stock ({{ product.stock }}
           available)
         </p>
         <p
@@ -144,21 +142,22 @@
       <!-- Action Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 mt-8">
         <button
-          pButton
-          label="Add to Cart"
           icon="pi pi-shopping-cart"
-          class="p-button-primary flex-1"
+          class="btn-purple-prim flex-1"
           (click)="addToCart()"
           [disabled]="!product.stock || product.stock === 0"
-        ></button>
+        >
+          Add to Cart
+        </button>
         <button
-          pButton
-          label="Buy Now"
+          label=""
           icon="pi pi-check"
-          class="p-button-success flex-1"
+          class="btn-white-prim flex-1"
           (click)="buyNow()"
           [disabled]="!product.stock || product.stock === 0"
-        ></button>
+        >
+          Buy Now
+        </button>
       </div>
     </div>
   </div>
