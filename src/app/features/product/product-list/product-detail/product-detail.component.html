@@ -162,36 +162,4 @@
     </div>
   </div>
 
-  <!-- Related Products -->
-  <div class="mt-16">
-    <h2 class="text-2xl font-bold mb-6">Related Products</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div
-        *ngFor="let product of relatedProducts"
-        class="border border-gray-200 p-4 transition-all hover:shadow-lg"
-      >
-        <img
-          [src]="product.image"
-          [alt]="product.name"
-          class="w-full h-48 object-cover mb-4"
-        />
-        <div class="flex justify-between items-start mb-2">
-          <h3 class="font-semibold text-gray-800">{{ product.name }}</h3>
-          <span
-            *ngIf="product.new"
-            class="bg-blue-500 text-white text-xs px-2 py-1"
-            >NEW</span
-          >
-        </div>
-        <p class="text-purple-600 font-bold mb-3">
-          KES {{ product.price.toFixed(2) }}
-        </p>
-        <button
-          pButton
-          label="View Details"
-          class="p-button-outlined w-full"
-        ></button>
-      </div>
-    </div>
-  </div>
-</div>
+ 

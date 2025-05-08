@@ -14,7 +14,7 @@ body {
 }
 
 .btn-white-prim {
-  @apply bg-white cursor-pointer flex justify-center hover:bg-black border border-slate-500 p-6 transition-colors items-center text-black;
+  @apply bg-white cursor-pointer flex justify-center hover:bg-black border border-slate-500 p-3 transition-colors items-center text-black;
 }
 
 .btn-white-prim:hover {
