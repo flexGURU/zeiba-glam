@@ -79,8 +79,8 @@
             class="w-full"
           ></p-slider>
           <div class="flex justify-between mt-2 text-sm text-gray-600">
-            <span>${{ priceRange[0] }}</span>
-            <span>${{ priceRange[1] }}</span>
+            <span>KES{{ priceRange[0] }}</span>
+            <span>KES{{ priceRange[1] }}</span>
           </div>
         </div>
 
@@ -129,7 +129,7 @@
           *ngIf="priceRange[0] > 0 || priceRange[1] < 1000"
           class="bg-gray-100 text-gray-800 text-sm px-2 py-1 flex items-center gap-1"
         >
-          Price: ${{ priceRange[0] }} - ${{ priceRange[1] }}
+          Price: KES{{ priceRange[0] }} - KES{{ priceRange[1] }}
           <button
             (click)="resetPriceFilter()"
             class="text-gray-500 hover:text-gray-700"
@@ -240,7 +240,7 @@
             {{ product.name }}
           </h3>
           <p class="text-purple-600 font-bold">
-            ${{ product.price.toFixed(2) }}
+            KES{{ product.price.toFixed(2) }}
           </p>
           <!-- Small "Add to Cart" icon that appears on hover -->
           <div
@@ -354,7 +354,7 @@
     </div>
     <div>
       <p class="text-purple-600 font-bold text-2xl mb-4">
-        ${{ selectedProduct.price.toFixed(2) }}
+        KES{{ selectedProduct.price.toFixed(2) }}
       </p>
       <p class="text-gray-600 mb-6">{{ selectedProduct.description }}</p>
 
@@ -420,17 +420,6 @@
       >
         <i class="pi pi-shopping-cart"></i> Add to Cart
       </button>
-
-      <div class="mt-4 flex items-center gap-6 text-gray-600">
-        <div class="flex items-center gap-1">
-          <i class="pi pi-truck"></i>
-          <span>Free shipping over $50</span>
-        </div>
-        <div class="flex items-center gap-1">
-          <i class="pi pi-refresh"></i>
-          <span>30-day returns</span>
-        </div>
-      </div>
     </div>
   </div>
 </p-dialog>
