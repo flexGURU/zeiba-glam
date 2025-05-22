@@ -14,8 +14,8 @@ export interface Product {
   bestSeller?: boolean;
   colors?: string[];
   sizes?: string[];
-  material?: string;
   stock?: number;
+  material?: string;
 }
 
 export interface ProductCategory {

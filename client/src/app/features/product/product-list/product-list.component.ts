@@ -76,7 +76,7 @@ export class ProductListComponent {
   selectedProduct: Product | null = null;
   selectedColor: string = '';
   selectedSize: string = '';
-  selectedQuantity: number = 1;
+     selectedQuantity: number = 1;
 
   constructor(
     private route: ActivatedRoute,
