@@ -1,0 +1,87 @@
+<p-dialog
+  [(visible)]="quickViewVisible"
+  [style]="{ width: '90%', maxWidth: '800px' }"
+  [modal]="true"
+  [draggable]="true"
+  [resizable]="true"
+  [closeOnEscape]="true"
+  styleClass="p-0 border rounded-sm square-dialog"
+  (visibleChange)="quickViewVisibleChange.emit($event)"
+>
+  <ng-template pTemplate="header">
+    <h2 class="text-xl font-semibold">{{ selectedProduct?.name }}</h2>
+  </ng-template>
+  <div *ngIf="selectedProduct" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <img
+        [src]="selectedProduct.image"
+        [alt]="selectedProduct.name"
+        class="w-full h-auto object-cover"
+      />
+    </div>
+    <div>
+      <p class="text-purple-600 font-bold text-2xl mb-4">
+        KES{{ selectedProduct.price.toFixed(2) }}
+      </p>
+      <p class="text-gray-600 mb-6">{{ selectedProduct.description }}</p>
+
+      Available Colors
+      <div
+        *ngIf="selectedProduct.colors && selectedProduct.colors.length > 0"
+        class="mb-4"
+      >
+        <h3 class="font-medium mb-2">Color</h3>
+        <div class="flex gap-2">
+          <div
+            *ngFor="let color of selectedProduct.colors"
+            class="w-8 h-8"
+            [style]="{ 'background-color': color }"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="selectedProduct.sizes && selectedProduct.sizes.length > 0"
+        class="mb-6"
+      >
+        <h3 class="font-medium mb-2">Available Sizes</h3>
+        <div class="flex gap-2">
+          <div
+            *ngFor="let size of selectedProduct.sizes"
+            [ngClass]="{
+              'bg-purple-600 text-white': selectedSize === size,
+              'bg-gray-200 text-gray-700': selectedSize !== size
+            }"
+            class="px-4 py-2 transition-colors"
+          >
+            {{ size }}
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="font-medium mb-2">Available Stock</h3>
+        <!-- <p-inputNumber
+          [(ngModel)]="selectedQuantity"
+          [showButtons]="true"
+          [min]="1"
+          [max]="selectedProduct.stock || 10"
+          buttonLayout="horizontal"
+          spinnerMode="horizontal"
+          inputStyleClass="text-center"
+          decrementButtonClass="p-button-secondary"
+          incrementButtonClass="p-button-secondary"
+        ></p-inputNumber> -->
+        {{ selectedProduct.stock }}
+      </div>
+
+      <button
+        routerLink="/product-detail/{{selectedProduct.id}}"
+        class="btn-purple-prim w-full"
+      >
+        Product Detail
+        <i class="pi pi-arrow-right ml-3"></i>
+      </button>
+    </div>
+  </div>
+</p-dialog>
