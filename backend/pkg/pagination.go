@@ -13,8 +13,8 @@ type Pagination struct {
 	PreviousPage uint32 `json:"previous_page"`
 }
 
-func (p *Pagination) Offset() int32 {
-	return int32((p.Page - 1) * p.PageSize)
+func Offset(page, pageSize uint32) int32 {
+	return int32((page - 1) * pageSize)
 }
 
 func CalculatePagination(totalItems, pageSize, page uint32) *Pagination {

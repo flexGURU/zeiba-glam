@@ -53,15 +53,17 @@ type Product struct {
 	Color         []string           `json:"color"`
 	StockQuantity int64              `json:"stock_quantity"`
 	DeletedAt     pgtype.Timestamptz `json:"deleted_at"`
+	UpdatedBy     int64              `json:"updated_by"`
 	CreatedAt     time.Time          `json:"created_at"`
 }
 
 type User struct {
-	ID          int64     `json:"id"`
-	Name        string    `json:"name"`
-	Email       string    `json:"email"`
-	PhoneNumber string    `json:"phone_number"`
-	Password    string    `json:"password"`
-	IsAdmin     bool      `json:"is_admin"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID           int64     `json:"id"`
+	Name         string    `json:"name"`
+	Email        string    `json:"email"`
+	PhoneNumber  string    `json:"phone_number"`
+	RefreshToken string    `json:"refresh_token"`
+	Password     string    `json:"password"`
+	IsAdmin      bool      `json:"is_admin"`
+	CreatedAt    time.Time `json:"created_at"`
 }

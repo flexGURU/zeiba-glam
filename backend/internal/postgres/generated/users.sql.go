@@ -7,10 +7,51 @@ package generated
 
 import (
 	"context"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (name, email, phone_number, refresh_token, password, is_admin)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, name, email, phone_number, refresh_token, password, is_admin, created_at
+`
+
+type CreateUserParams struct {
+	Name         string `json:"name"`
+	Email        string `json:"email"`
+	PhoneNumber  string `json:"phone_number"`
+	RefreshToken string `json:"refresh_token"`
+	Password     string `json:"password"`
+	IsAdmin      bool   `json:"is_admin"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, createUser,
+		arg.Name,
+		arg.Email,
+		arg.PhoneNumber,
+		arg.RefreshToken,
+		arg.Password,
+		arg.IsAdmin,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.RefreshToken,
+		&i.Password,
+		&i.IsAdmin,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, name, email, phone_number, password, is_admin, created_at FROM users WHERE email = $1
+SELECT id, name, email, phone_number, refresh_token, password, is_admin, created_at FROM users WHERE email = $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -21,6 +62,173 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Name,
 		&i.Email,
 		&i.PhoneNumber,
+		&i.RefreshToken,
+		&i.Password,
+		&i.IsAdmin,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, name, email, phone_number, refresh_token, password, is_admin, created_at FROM users WHERE id = $1
+`
+
+func (q *Queries) GetUserByID(ctx context.Context, id int64) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.RefreshToken,
+		&i.Password,
+		&i.IsAdmin,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const listUsers = `-- name: ListUsers :many
+SELECT 
+    id,
+    name,
+    email,
+    phone_number,
+    is_admin,
+    created_at
+FROM users
+WHERE
+    (
+        COALESCE($1, '') = '' 
+        OR LOWER(name) LIKE $1 
+        OR LOWER(email) LIKE $1 
+        OR LOWER(phone_number) LIKE $1
+    )
+    AND (
+        $2::boolean IS NULL 
+        OR is_admin = $2
+    )
+ORDER BY created_at DESC
+LIMIT $4 OFFSET $3
+`
+
+type ListUsersParams struct {
+	Search  interface{} `json:"search"`
+	IsAdmin pgtype.Bool `json:"is_admin"`
+	Offset  int32       `json:"offset"`
+	Limit   int32       `json:"limit"`
+}
+
+type ListUsersRow struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Email       string    `json:"email"`
+	PhoneNumber string    `json:"phone_number"`
+	IsAdmin     bool      `json:"is_admin"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]ListUsersRow, error) {
+	rows, err := q.db.Query(ctx, listUsers,
+		arg.Search,
+		arg.IsAdmin,
+		arg.Offset,
+		arg.Limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListUsersRow{}
+	for rows.Next() {
+		var i ListUsersRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Email,
+			&i.PhoneNumber,
+			&i.IsAdmin,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listUsersCount = `-- name: ListUsersCount :one
+SELECT COUNT(*) AS total_users
+FROM users
+WHERE
+    (
+        COALESCE($1, '') = '' 
+        OR LOWER(name) LIKE $1 
+        OR LOWER(email) LIKE $1 
+        OR LOWER(phone_number) LIKE $1
+    )
+    AND (
+        $2::boolean IS NULL 
+        OR is_admin = $2
+    )
+`
+
+type ListUsersCountParams struct {
+	Search  interface{} `json:"search"`
+	IsAdmin pgtype.Bool `json:"is_admin"`
+}
+
+func (q *Queries) ListUsersCount(ctx context.Context, arg ListUsersCountParams) (int64, error) {
+	row := q.db.QueryRow(ctx, listUsersCount, arg.Search, arg.IsAdmin)
+	var total_users int64
+	err := row.Scan(&total_users)
+	return total_users, err
+}
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users 
+SET name = coalesce($1, name),
+    email = coalesce($2, email),
+    phone_number = coalesce($3, phone_number),
+    password = coalesce($4, password),
+    is_admin = coalesce($5, is_admin),
+    refresh_token = coalesce($6, refresh_token)
+WHERE id = $7
+RETURNING id, name, email, phone_number, refresh_token, password, is_admin, created_at
+`
+
+type UpdateUserParams struct {
+	Name         pgtype.Text `json:"name"`
+	Email        pgtype.Text `json:"email"`
+	PhoneNumber  pgtype.Text `json:"phone_number"`
+	Password     pgtype.Text `json:"password"`
+	IsAdmin      pgtype.Bool `json:"is_admin"`
+	RefreshToken pgtype.Text `json:"refresh_token"`
+	ID           int64       `json:"id"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.Name,
+		arg.Email,
+		arg.PhoneNumber,
+		arg.Password,
+		arg.IsAdmin,
+		arg.RefreshToken,
+		arg.ID,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.RefreshToken,
 		&i.Password,
 		&i.IsAdmin,
 		&i.CreatedAt,

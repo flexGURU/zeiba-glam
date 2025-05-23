@@ -3,6 +3,7 @@ CREATE TABLE "users" (
   "name" varchar(255) NOT NULL,
   "email" varchar(255) UNIQUE NOT NULL,
   "phone_number" varchar(255) UNIQUE NOT NULL,
+  "refresh_token" text UNIQUE NOT NULL,
   "password" varchar(255) NOT NULL,
   "is_admin" bool NOT NULL DEFAULT false,
   "created_at" timestamptz NOT NULL DEFAULT (now())
@@ -19,7 +20,10 @@ CREATE TABLE "products" (
   "color" text[] NOT NULL DEFAULT '{}',
   "stock_quantity" bigint NOT NULL DEFAULT 0,
   "deleted_at" timestamptz,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "updated_by" bigint NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+
+  CONSTRAINT "products_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "users" ("id")
 );
 
 CREATE TABLE "orders" (
@@ -43,8 +47,8 @@ CREATE TABLE "order_items" (
   "quantity" int NOT NULL DEFAULT 1,
   "amount" decimal(10,2) NOT NULL,
 
-   CONSTRAINT "order_item_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders" ("id"),
-   CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products" ("id")
+  CONSTRAINT "order_item_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders" ("id"),
+  CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products" ("id")
 );
 
 CREATE TABLE "payments" (

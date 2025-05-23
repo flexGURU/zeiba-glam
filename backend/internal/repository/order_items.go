@@ -13,9 +13,5 @@ type OrderItem struct {
 }
 
 type OrderItemRepository interface {
-	CreateOrderItem(ctx context.Context, orderItem OrderItem) (OrderItem, error)
-	GetOrderItemByID(ctx context.Context, id int64) (OrderItem, error)
-	GetOrderItems(ctx context.Context) ([]OrderItem, error)
-	UpdateOrderItem(ctx context.Context, orderItem OrderItem) (OrderItem, error)
-	DeleteOrderItem(ctx context.Context, id int64) error
+	GetOrderItemByID(ctx context.Context, id int64) (*OrderItem, error)
 }
