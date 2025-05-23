@@ -44,3 +44,16 @@ Thumbs.db
 
 push.sh
 .vercel
+
+# Binaries
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Configs
+*.env
+
+# Logs
+*.logs
