@@ -14,3 +14,7 @@ sql:
         overrides:
           - db_type: "timestamptz"
             go_type: "time.Time"
+          - db_type: "int"
+            go_type: "uint32"
+          - db_type: "decimal"
+            go_type: "float64"

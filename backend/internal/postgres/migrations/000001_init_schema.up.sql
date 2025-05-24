@@ -19,7 +19,7 @@ CREATE TABLE "products" (
   "size" text[] NOT NULL DEFAULT '{}',
   "color" text[] NOT NULL DEFAULT '{}',
   "stock_quantity" bigint NOT NULL DEFAULT 0,
-  "deleted_at" timestamptz,
+  "deleted_at" timestamptz NULL,
   "updated_by" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
 

@@ -43,9 +43,9 @@ func (r *UserRepo) CreateUser(
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error creating user: %s", err.Error())
 	}
 
-	return &repository.User{
-		ID: createdUser.ID,
-	}, nil
+	user.ID = createdUser.ID
+
+	return user, nil
 }
 
 func (r *UserRepo) GetUserByID(
@@ -85,7 +85,9 @@ func (r *UserRepo) ListUsers(
 	filter *repository.UserFilter,
 ) ([]*repository.User, *pkg.Pagination, error) {
 	paramListUser := generated.ListUsersParams{
-		Search: "",
+		Search: pgtype.Text{
+			Valid: false,
+		},
 		IsAdmin: pgtype.Bool{
 			Valid: false,
 		},
@@ -94,7 +96,9 @@ func (r *UserRepo) ListUsers(
 	}
 
 	paramListUserCount := generated.ListUsersCountParams{
-		Search: "",
+		Search: pgtype.Text{
+			Valid: false,
+		},
 		IsAdmin: pgtype.Bool{
 			Valid: false,
 		},
