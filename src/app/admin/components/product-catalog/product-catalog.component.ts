@@ -28,6 +28,7 @@ export class ProductCatalogComponent {
   loading = false;
   showDialog = false;
   selectedProduct: Product | null = null;
+  quickViewVisible: boolean = false;
 
   constructor(
     private productService: ProductService,

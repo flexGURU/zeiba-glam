@@ -9,6 +9,7 @@ export const routes: Routes = [
     path: '',
     component: AdminLayoutComponent,
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'catalog', component: ProductCatalogComponent },
       { path: 'login', component: LoginComponent },

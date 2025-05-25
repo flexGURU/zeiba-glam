@@ -1,12 +1,7 @@
 <div class="p-6">
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold">Products</h2>
-    <p-button
-      label="Add Product"
-      icon="pi pi-plus"
-      (onClick)="showAddDialog()"
-      class=""
-    >
+    <p-button label="Add Product" icon="pi pi-plus" (onClick)="showAddDialog()" class="">
     </p-button>
   </div>
 
@@ -59,20 +54,22 @@
           </p-tag>
         </td>
         <td>
-          <p-button
-            icon="pi pi-pencil"
-            class="p-button-rounded p-button-text p-button-success mr-2"
-            pTooltip="Edit"
-            (onClick)="editProduct(product)"
-          >
-          </p-button>
-          <p-button
-            icon="pi pi-trash"
-            class="p-button-rounded p-button-text p-button-danger"
-            pTooltip="Delete"
-            (onClick)="deleteProduct(product)"
-          >
-          </p-button>
+          <div class="flex flex-col lg:flex-row">
+            <p-button
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text p-button-success mr-2 mb-2"
+              pTooltip="Edit"
+              (onClick)="editProduct(product)"
+            >
+            </p-button>
+            <p-button
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Delete"
+              (onClick)="deleteProduct(product)"
+            >
+            </p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -82,6 +79,7 @@
     [(visible)]="showDialog"
     [product]="selectedProduct"
     (save)="onProductSave($event)"
+    [(visible)]="quickViewVisible"
   >
   </app-product-form>
 
