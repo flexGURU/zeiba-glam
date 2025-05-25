@@ -8,9 +8,9 @@ SELECT *
 FROM users
 WHERE
   (
-    sqlc.narg('id') IS NOT NULL AND id = sqlc.narg('id')
+    sqlc.narg('id')::bigint IS NOT NULL AND id = sqlc.narg('id')
     OR
-    sqlc.narg('email') IS NOT NULL AND email = sqlc.narg('email')
+    sqlc.narg('email')::text IS NOT NULL AND email = sqlc.narg('email')
   )
 LIMIT 1;
 
@@ -19,9 +19,9 @@ SELECT id, name, email, phone_number, is_admin, created_at
 FROM users 
 WHERE 
     (
-      sqlc.narg('id') IS NOT NULL AND id = sqlc.narg('id')
+      sqlc.narg('id')::bigint IS NOT NULL AND id = sqlc.narg('id')
       OR
-      sqlc.narg('email') IS NOT NULL AND email = sqlc.narg('email')
+      sqlc.narg('email')::text IS NOT NULL AND email = sqlc.narg('email')
     )
 LIMIT 1;
 

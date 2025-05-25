@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"strings"
 
 	"github.com/flexGURU/zeiba-glam/backend/internal/postgres/generated"
 	"github.com/flexGURU/zeiba-glam/backend/internal/repository"
@@ -45,6 +46,8 @@ func (r *UserRepo) CreateUser(
 
 	user.ID = uint32(createdUser.ID)
 	user.CreatedAt = createdUser.CreatedAt
+	user.Password = nil
+	user.RefreshToken = nil
 
 	return user, nil
 }
@@ -57,11 +60,17 @@ func (r *UserRepo) GetUserInternal(
 	params := generated.GetUserInternalParams{}
 
 	if id != 0 {
-		params.ID = id
+		params.ID = pgtype.Int8{
+			Int64: int64(id),
+			Valid: true,
+		}
 	}
 
 	if email != "" {
-		params.Email = email
+		params.Email = pgtype.Text{
+			String: email,
+			Valid:  true,
+		}
 	}
 
 	if id == 0 && email == "" {
@@ -96,11 +105,17 @@ func (r *UserRepo) GetUser(
 ) (*repository.User, error) {
 	getUserParams := generated.GetUserParams{}
 	if id != 0 {
-		getUserParams.ID = id
+		getUserParams.ID = pgtype.Int8{
+			Int64: int64(id),
+			Valid: true,
+		}
 	}
 
 	if email != "" {
-		getUserParams.Email = email
+		getUserParams.Email = pgtype.Text{
+			String: email,
+			Valid:  true,
+		}
 	}
 
 	if id == 0 && email == "" {
@@ -131,32 +146,20 @@ func (r *UserRepo) ListUsers(
 	filter *repository.UserFilter,
 ) ([]*repository.User, *pkg.Pagination, error) {
 	paramListUser := generated.ListUsersParams{
-		Search: pgtype.Text{
-			Valid: false,
-		},
-		IsAdmin: pgtype.Bool{
-			Valid: false,
-		},
 		Limit:  int32(filter.Pagination.PageSize),
 		Offset: pkg.Offset(filter.Pagination.Page, filter.Pagination.PageSize),
 	}
 
-	paramListUserCount := generated.ListUsersCountParams{
-		Search: pgtype.Text{
-			Valid: false,
-		},
-		IsAdmin: pgtype.Bool{
-			Valid: false,
-		},
-	}
+	paramListUserCount := generated.ListUsersCountParams{}
 
 	if filter.Search != nil {
+		search := strings.ToLower(*filter.Search)
 		paramListUser.Search = pgtype.Text{
-			String: *filter.Search,
+			String: "%" + search + "%",
 			Valid:  true,
 		}
 		paramListUserCount.Search = pgtype.Text{
-			String: *filter.Search,
+			String: "%" + search + "%",
 			Valid:  true,
 		}
 	}

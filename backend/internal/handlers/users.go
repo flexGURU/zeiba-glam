@@ -196,6 +196,9 @@ func (s *Server) listUsersHandler(c *gin.Context) {
 
 		return
 	}
+	if pageNo < 1 {
+		pageNo = 1
+	}
 	filter.Pagination.Page = pageNo
 
 	pageSize, err := pkg.StringToUint32(c.DefaultQuery("limit", "10"))
@@ -248,25 +251,59 @@ func (s *Server) updateUserHandler(c *gin.Context) {
 		return
 	}
 
-	if payload.UserID != userId {
+	if payload.UserID != userId && !payload.IsAdmin {
 		c.JSON(http.StatusForbidden, gin.H{"message": "You are not authorized to update this user"})
 		return
 	}
 
-	isAdmin, err := pkg.StringToBool(req.IsAdmin)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err))
-		return
+	updateUser := &repository.UpdateUser{
+		ID: userId,
 	}
 
-	user, err := s.repo.UserRepo.UpdateUser(c, &repository.UpdateUser{
-		ID:          userId,
-		Name:        &req.Name,
-		Email:       &req.Email,
-		PhoneNumber: &req.PhoneNumber,
-		Password:    &req.Password,
-		IsAdmin:     &isAdmin,
-	})
+	if req.Name != "" {
+		updateUser.Name = &req.Name
+	}
+
+	if req.Email != "" {
+		updateUser.Email = &req.Email
+	}
+
+	if req.PhoneNumber != "" {
+		updateUser.PhoneNumber = &req.PhoneNumber
+	}
+
+	if req.Password != "" {
+		if payload.UserID != userId && payload.IsAdmin {
+			c.JSON(
+				http.StatusForbidden,
+				gin.H{"message": "You are not authorized to update this user"},
+			)
+			return
+		}
+		hashPassword, err := pkg.HashPassword(req.Password, s.config.PASSWORD_COST)
+		if err != nil {
+			c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+			return
+		}
+		updateUser.Password = &hashPassword
+	}
+
+	if req.IsAdmin != "" {
+		if payload.IsAdmin {
+			isAdmin, err := pkg.StringToBool(req.IsAdmin)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, errorResponse(err))
+				return
+			}
+
+			updateUser.IsAdmin = &isAdmin
+		} else {
+			c.JSON(http.StatusForbidden, gin.H{"message": "You are not authorized to update this user"})
+			return
+		}
+	}
+
+	user, err := s.repo.UserRepo.UpdateUser(c, updateUser)
 	if err != nil {
 		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
 		return

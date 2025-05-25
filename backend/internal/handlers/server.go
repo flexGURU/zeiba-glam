@@ -54,8 +54,8 @@ func (s *Server) setUpRoutes() {
 
 	// auth routes
 	v1.POST("/auth/login", s.loginUserHandler)
-	v1.POST("/auth/refresh", s.refreshTokenHandler)
-	v1.POST("/auth/logout", s.logoutUserHandler)
+	v1.GET("/auth/refresh", s.refreshTokenHandler)
+	v1.GET("/auth/logout", s.logoutUserHandler)
 
 	// users routes
 	v1.POST("/users", s.createUserHandler)
@@ -108,11 +108,8 @@ func (s *Server) Start() error {
 	return nil
 }
 
-func (s *Server) Stop() error {
+func (s *Server) Stop(ctx context.Context) error {
 	log.Println("Shutting down http server...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 
 	return s.srv.Shutdown(ctx)
 }
