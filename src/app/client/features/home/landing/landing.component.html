@@ -1,0 +1,81 @@
+<div
+  class="relative w-full h-screen overflow-hidden bg-gradient-to-r from-purple-400 via-pink-300 to-pink-200"
+>
+  <!-- Background pattern -->
+  <div class="absolute inset-0 opacity-20 bg-pattern"></div>
+
+  <!-- Hero content container -->
+  <div class="container relative z-10 flex items-center h-full mx-auto px-4 md:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-between w-full gap-8">
+      <!-- Text content -->
+      <div class="max-w-lg">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-gray-800 leading-tight">
+          Discover Your <span class="text-purple-700">Style</span>
+        </h1>
+        <p class="text-lg mb-8 text-gray-700">
+          Elevate your wardrobe with our elegant collection of modern women's fashion designed for
+          the confident, contemporary woman.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            routerLink="/products/new-arrivals"
+            class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-purple-600 text-white font-medium transition-all hover:bg-purple-700 hover:shadow-lg"
+          >
+            Shop New Arrivals
+          </a>
+          <a
+            routerLink="/products/all"
+            class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-purple-600 font-medium border border-purple-200 transition-all hover:bg-gray-50 hover:shadow-md"
+          >
+            View All <i class="ml-2 pi pi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Logo showcase -->
+      <div class="relative hidden md:flex w-full max-w-md items-center justify-center">
+        <div
+          class="logo-container relative z-10 p-8 rounded-lg bg-white/20 backdrop-blur-sm shadow-2xl transform transition-all hover:shadow-purple-200/50 hover:scale-105"
+        >
+          <div class="logo-main text-center">
+            <div class="logo-zeiba mb-1 text-5xl font-extrabold tracking-widest">
+              <span
+                class="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500"
+                >ZEIBA</span
+              >
+            </div>
+            <div class="logo-glam text-5xl font-light tracking-widest text-gray-700 uppercase">
+              GLAM
+            </div>
+            <div class="logo-tagline text-xs text-gray-500 mt-2 italic">Elegance Redefined</div>
+          </div>
+          <div
+            class="logo-decoration absolute -top-3 -right-3 w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-300 shadow-md"
+          ></div>
+          <div
+            class="logo-decoration absolute -bottom-3 -left-3 w-8 h-8 rounded-full bg-gradient-to-br from-pink-300 to-purple-400 shadow-md"
+          ></div>
+          <div
+            class="logo-border absolute inset-0 border-2 border-purple-100 rounded-lg pointer-events-none"
+          ></div>
+        </div>
+
+        <!-- Decorative elements -->
+        <div
+          class="absolute -bottom-6 right-12 w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-300 rounded-full"
+        ></div>
+        <div
+          class="absolute -top-6 left-12 w-20 h-1 bg-gradient-to-r from-pink-300 to-purple-400 rounded-full"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating elements for visual interest -->
+  <div
+    class="absolute bottom-10 left-10 w-16 h-16 rounded-full bg-purple-500 opacity-20 animate-pulse"
+  ></div>
+  <div
+    class="absolute top-20 right-20 w-12 h-12 rounded-full bg-pink-400 opacity-20 animate-pulse"
+  ></div>
+</div>

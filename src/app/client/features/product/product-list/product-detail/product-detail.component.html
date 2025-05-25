@@ -1,0 +1,154 @@
+<!-- product-detail.component.html -->
+<div class="container mx-auto px-4 py-8">
+  <p-toast></p-toast>
+
+  <!-- Breadcrumb -->
+  <div class="mb-6">
+    <p-breadcrumb
+      [model]="[
+        { label: 'Home', url: '/' },
+        { label: product.category, url: '/category/' + product.category },
+        { label: product.name },
+      ]"
+      [home]="{ icon: 'pi pi-home', url: '/' }"
+    ></p-breadcrumb>
+  </div>
+
+  <!-- Product Details -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Product Image -->
+    <div class="relative">
+      <!-- Labels -->
+      <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        <span *ngIf="product.new" class="bg-blue-500 text-white px-3 py-1 text-sm">NEW</span>
+        <span *ngIf="product.bestSeller" class="bg-amber-500 text-white px-3 py-1 text-sm"
+          >BEST SELLER</span
+        >
+        <span *ngIf="product.featured" class="bg-purple-600 text-white px-3 py-1 text-sm"
+          >FEATURED</span
+        >
+      </div>
+
+      <!-- Main Image -->
+      <img
+        [src]="product.image"
+        [alt]="product.name"
+        class="w-full h-auto object-cover shadow-md"
+      />
+    </div>
+
+    <!-- Product Info -->
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ product.name }}</h1>
+
+      <!-- Price -->
+      <p class="text-2xl font-bold text-purple-600 mb-4">KES {{ product.price.toFixed(2) }}</p>
+
+      <!-- Description -->
+      <div class="text-gray-600 mb-6">
+        <p>{{ product.description }}</p>
+      </div>
+
+      <!-- Material -->
+      <div *ngIf="product.material" class="mb-6">
+        <h3 class="font-semibold text-gray-700 mb-2">Material</h3>
+        <p class="text-gray-600">{{ product.material }}</p>
+      </div>
+
+      <!-- Color Selection -->
+      <div *ngIf="product.colors && product.colors.length > 0" class="mb-6">
+        <h3 class="font-semibold text-gray-700 mb-2">Color</h3>
+        <div class="flex flex-wrap gap-3">
+          <div
+            *ngFor="let color of product.colors"
+            (click)="selectedColor = color"
+            [ngClass]="{
+              'ring-2 ring-purple-600 ring-offset-2': isColorSelected(color),
+            }"
+            class="w-10 h-10 rounded-full cursor-pointer transition-all hover:scale-110"
+            [style]="{ 'background-color': color }"
+            [pTooltip]="getColorName(color)"
+          ></div>
+        </div>
+        <p class="mt-2 text-gray-600" *ngIf="selectedColor">
+          Selected: {{ getColorName(selectedColor) }}
+        </p>
+      </div>
+
+      <!-- Size Selection -->
+      <div *ngIf="product.sizes && product.sizes.length > 0" class="mb-6">
+        <h3 class="font-semibold text-gray-700 mb-2">Size</h3>
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let size of product.sizes"
+            (click)="selectedSize = size"
+            [ngClass]="{
+              'bg-purple-600 text-white': isSizeSelected(size),
+              'bg-gray-200 text-gray-700 hover:bg-gray-300': !isSizeSelected(size),
+            }"
+            class="px-4 py-2 font-medium transition-colors"
+          >
+            {{ size }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Stock -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-gray-700 mb-2">Availability</h3>
+        <p class="text-green-600" *ngIf="product.stock && product.stock > 10">
+          <i class="pi pi-check-circle mr-2"></i> In Stock ({{ product.stock }}
+          available)
+        </p>
+        <p
+          class="text-yellow-600"
+          *ngIf="product.stock && product.stock <= 10 && product.stock > 0"
+        >
+          <i class="pi pi-exclamation-circle mr-2"></i> Low Stock (Only {{ product.stock }} left)
+        </p>
+        <p class="text-red-600" *ngIf="!product.stock || product.stock === 0">
+          <i class="pi pi-times-circle mr-2"></i> Out of Stock
+        </p>
+      </div>
+
+      <!-- Quantity -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-gray-700 mb-2">Quantity</h3>
+        <p-inputNumber
+          [(ngModel)]="quantity"
+          [showButtons]="true"
+          [min]="1"
+          [max]="product.stock || 10"
+          buttonLayout="horizontal"
+          spinnerMode="horizontal"
+          inputStyleClass="text-center w-20"
+          decrementButtonClass="p-button-secondary"
+          incrementButtonClass="p-button-secondary"
+        ></p-inputNumber>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 mt-8">
+        <button
+          icon="pi pi-shopping-cart"
+          class="btn-purple-prim flex-1"
+          (click)="addToCart()"
+          [disabled]="!product.stock || product.stock === 0"
+        >
+          Add to Cart
+        </button>
+        <button
+          label=""
+          icon="pi pi-check"
+          class="btn-white-prim flex-1"
+          (click)="buyNow()"
+          [disabled]="!product.stock || product.stock === 0"
+        >
+          Buy Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-product-related></app-product-related>
+</div>

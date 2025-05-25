@@ -30,9 +30,7 @@ export class CartService {
 
   addToCart(product: any, quantity: number = 1): void {
     const currentItems = this.cartItems.value;
-    const existingItemIndex = currentItems.findIndex(
-      (item) => item.id === product.id
-    );
+    const existingItemIndex = currentItems.findIndex((item) => item.id === product.id);
 
     if (existingItemIndex !== -1) {
       // Product already in cart, update quantity
@@ -71,9 +69,7 @@ export class CartService {
   }
 
   removeFromCart(productId: number): void {
-    const filteredItems = this.cartItems.value.filter(
-      (item) => item.id !== productId
-    );
+    const filteredItems = this.cartItems.value.filter((item) => item.id !== productId);
     this.cartItems.next(filteredItems);
     this.saveCart();
   }
@@ -84,9 +80,6 @@ export class CartService {
   }
 
   getCartTotal(): number {
-    return this.cartItems.value.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return this.cartItems.value.reduce((total, item) => total + item.price * item.quantity, 0);
   }
 }

@@ -1,0 +1,83 @@
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold">Products</h2>
+      <p-button 
+        label="Add Product" 
+        icon="pi pi-plus" 
+        (onClick)="showAddDialog()"
+        class="p-button-success">
+      </p-button>
+    </div>
+
+    <p-table 
+      [value]="products" 
+      [paginator]="true" 
+      [rows]="10" 
+      [loading]="loading"
+      [globalFilterFields]="['name', 'category']"
+      #dt>
+      
+      <ng-template pTemplate="caption">
+        <div class="flex justify-between items-center">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              type="text" 
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+              placeholder="Search products..." />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Image</th>
+          <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+          <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>
+            <img [src]="product.image" [alt]="product.name" class="w-12 h-12 object-cover rounded">
+          </td>
+          <td>{{ product.name }}</td>
+          <td>\${{ product.price }}</td>
+          <td>{{ product.category }}</td>
+          <td>
+            <p-tag 
+              [value]="product.stock?.toString() || '0'" 
+              [severity]="getStockSeverity(product.stock || 0)">
+            </p-tag>
+          </td>
+          <td>
+            <p-button 
+              icon="pi pi-pencil" 
+              class="p-button-rounded p-button-text p-button-success mr-2"
+              pTooltip="Edit"
+              (onClick)="editProduct(product)">
+            </p-button>
+            <p-button 
+              icon="pi pi-trash" 
+              class="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Delete"
+              (onClick)="deleteProduct(product)">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <app-product-form 
+      [(visible)]="showDialog" 
+      [product]="selectedProduct"
+      (save)="onProductSave($event)">
+    </app-product-form>
+
+    <p-confirmDialog></p-confirmDialog>
+  </div>

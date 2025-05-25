@@ -1,8 +1,8 @@
-@import "tailwindcss";
-@import "primeicons/primeicons.css";
+@import 'tailwindcss';
+@import 'primeicons/primeicons.css';
 
 body {
-  font-family: "Lexend", sans-serif;
+  font-family: 'Lexend', sans-serif;
 }
 
 .input {

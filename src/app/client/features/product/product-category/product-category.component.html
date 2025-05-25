@@ -1,0 +1,24 @@
+<div class="container mx-auto px-4">
+  <h2 class="text-3xl font-bold mb-8 text-center">Shop by Category</h2>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    <a
+      *ngFor="let category of categories"
+      [routerLink]="['/products', category.name.toLowerCase()]"
+      class="group relative overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div class="aspect-square bg-gray-100 flex items-center justify-center">
+        <img
+          [src]="category.image"
+          [alt]="category.name"
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+        <h3 class="text-white font-semibold text-xl p-4">
+          {{ category.name }}
+        </h3>
+      </div>
+    </a>
+  </div>
+</div>

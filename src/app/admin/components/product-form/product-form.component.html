@@ -1,0 +1,113 @@
+<p-dialog
+  [header]="product ? 'Edit Product' : 'Add Product'"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  (onHide)="onHide()"
+>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="field">
+        <label for="name" class="block text-sm font-medium mb-2">Name *</label>
+        <input
+          type="text"
+          pInputText
+          id="name"
+          formControlName="name"
+          class="w-full"
+          [class.ng-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+        />
+      </div>
+
+      <div class="field">
+        <label for="price" class="block text-sm font-medium mb-2">Price *</label>
+        <p-inputNumber
+          inputId="price"
+          formControlName="price"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          class="w-full"
+        >
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="category" class="block text-sm font-medium mb-2">Category *</label>
+      <p-select
+        [options]="categories"
+        formControlName="category"
+        placeholder="Select a category"
+        class="w-full"
+      >
+      </p-select>
+    </div>
+
+    <div class="field">
+      <label for="description" class="block text-sm font-medium mb-2">Description</label>
+      <textarea pInputTextarea formControlName="description" rows="3" class="w-full"> </textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="field">
+        <label for="stock" class="block text-sm font-medium mb-2">Stock</label>
+        <p-inputNumber inputId="stock" formControlName="stock" class="w-full"> </p-inputNumber>
+      </div>
+
+      <div class="field">
+        <label for="material" class="block text-sm font-medium mb-2">Material</label>
+        <input type="text" pInputText id="material" formControlName="material" class="w-full" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="block text-sm font-medium mb-2">Product Image</label>
+      <div class="flex items-center space-x-4">
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Choose Image"
+          accept="image/*"
+          [maxFileSize]="1000000"
+          (onSelect)="onImageSelect($event)"
+          [auto]="false"
+        >
+        </p-fileUpload>
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          alt="Preview"
+          class="w-16 h-16 object-cover rounded"
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="block text-sm font-medium mb-2">Options</label>
+      <div class="flex space-x-4">
+        <p-checkbox formControlName="featured" label="Featured" binary="true"> </p-checkbox>
+        <p-checkbox formControlName="new" label="New" binary="true"> </p-checkbox>
+        <p-checkbox formControlName="bestSeller" label="Best Seller" binary="true"> </p-checkbox>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-2 pt-4">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-text"
+        type="button"
+        (onClick)="onHide()"
+      >
+      </p-button>
+      <p-button
+        label="Save"
+        icon="pi pi-check"
+        type="submit"
+        [loading]="saving"
+        [disabled]="productForm.invalid"
+      >
+      </p-button>
+    </div>
+  </form>
+</p-dialog>

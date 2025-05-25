@@ -1,22 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  image: string;
-  description: string;
-  featured?: boolean;
-  new?: boolean;
-  bestSeller?: boolean;
-  colors?: string[];
-  sizes?: string[];
-  stock?: number;
-  material?: string;
-}
+import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Product } from './interfaces';
 
 export interface ProductCategory {
   name: string;
@@ -32,9 +17,7 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
   getAllProducts(): Observable<Product[]> {
-    return this.http
-      .get<Product[]>(this.productsUrl)
-      .pipe(catchError(this.handleError));
+    return this.http.get<Product[]>(this.productsUrl).pipe(catchError(this.handleError));
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
@@ -59,9 +42,7 @@ export class ProductService {
   getProductsByCategory(category: string): Observable<Product[]> {
     return this.getAllProducts().pipe(
       map((products) =>
-        products.filter(
-          (product) => product.category.toLowerCase() === category.toLowerCase()
-        )
+        products.filter((product) => product.category.toLowerCase() === category.toLowerCase())
       ),
       catchError(this.handleError)
     );
@@ -90,8 +71,16 @@ export class ProductService {
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
-    return throwError(
-      () => new Error('Something went wrong. Please try again later.')
-    );
+    return throwError(() => new Error('Something went wrong. Please try again later.'));
+  }
+
+  updateProduct(product: Product): Observable<Product | null> {
+    return of(null);
+  }
+  addProduct(product: Product): Observable<Product | null> {
+    return of(null);
+  }
+  deleteProduct(productId: string): Observable<Product | null> {
+    return of(null);
   }
 }
