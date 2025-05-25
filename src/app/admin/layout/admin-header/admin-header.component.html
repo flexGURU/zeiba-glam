@@ -1,0 +1,18 @@
+<div class="bg-white shadow flex items-center justify-between px-20">
+  <!-- Logo Section -->
+  <div class="px-6 py-4 flex items-center">
+    <app-logo></app-logo>
+  </div>
+
+  <!-- Logout Button -->
+  <div>
+    <button
+      pButton
+      type="button"
+      label="Logout"
+      icon="pi pi-sign-out"
+      class="p-button-danger bg-red-500"
+      (click)="logOut()"
+    ></button>
+  </div>
+</div>

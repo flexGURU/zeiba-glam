@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-product-form',
@@ -30,6 +31,7 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule,
     FormsModule,
     ReactiveFormsModule,
+    InputTextModule
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',

@@ -12,6 +12,7 @@ import { CartService } from '../../../../core/services/cart.service';
 import { ProductPreviewComponent } from '../product-preview/product-preview.component';
 import { Product } from '../../../../core/services/interfaces';
 import { ProductService } from '../../../../core/services/product.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-product-list',
@@ -27,6 +28,7 @@ import { ProductService } from '../../../../core/services/product.service';
     InputNumberModule,
     FormsModule,
     ProductPreviewComponent,
+    ButtonModule,
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',

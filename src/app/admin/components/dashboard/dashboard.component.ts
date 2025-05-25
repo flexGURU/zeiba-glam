@@ -5,10 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { ProductCatalogComponent } from '../product-catalog/product-catalog.component';
 import { MessageService } from 'primeng/api';
 import { LogoComponent } from '../../../core/components/logo/logo.component';
+import { AdminHeaderComponent } from "../../layout/admin-header/admin-header.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, ProductCatalogComponent, ButtonModule, LogoComponent],
+  imports: [CommonModule, ProductCatalogComponent, ButtonModule, LogoComponent, AdminHeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   providers: [MessageService],

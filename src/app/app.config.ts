@@ -8,6 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import MyPurplePreset from './preset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     // provideClientHydration(withEventReplay()),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: MyPurplePreset,
         options: {
           darkModeSelector: '.my-app-dark',
         },

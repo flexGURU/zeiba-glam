@@ -7,13 +7,21 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [ButtonModule, TableModule, TagModule, ProductFormComponent, ConfirmDialogModule],
+  imports: [
+    ButtonModule,
+    InputText,
+    TableModule,
+    TagModule,
+    ProductFormComponent,
+    ConfirmDialogModule,
+  ],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.css',
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
 })
 export class ProductCatalogComponent {
   products: Product[] = [];
