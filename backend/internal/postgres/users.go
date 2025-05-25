@@ -31,9 +31,9 @@ func (r *UserRepo) CreateUser(
 		Name:         user.Name,
 		Email:        user.Email,
 		PhoneNumber:  user.PhoneNumber,
-		Password:     user.Password,
+		Password:     *user.Password,
 		IsAdmin:      user.IsAdmin,
-		RefreshToken: user.RefreshToken,
+		RefreshToken: *user.RefreshToken,
 	})
 	if err != nil {
 		if pkg.PgxErrorCode(err) == pkg.UNIQUE_VIOLATION {
@@ -43,32 +43,32 @@ func (r *UserRepo) CreateUser(
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error creating user: %s", err.Error())
 	}
 
-	user.ID = createdUser.ID
+	user.ID = uint32(createdUser.ID)
+	user.CreatedAt = createdUser.CreatedAt
 
 	return user, nil
 }
 
-func (r *UserRepo) GetUserByID(
+func (r *UserRepo) GetUserInternal(
 	ctx context.Context,
-	id int64,
-) (*repository.User, error) {
-	user, err := r.queries.GetUserByID(ctx, id)
-	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "user not found")
-		}
-
-		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting user: %s", err.Error())
-	}
-
-	return marshalUser(user), nil
-}
-
-func (r *UserRepo) GetUserByEmail(
-	ctx context.Context,
+	id uint32,
 	email string,
 ) (*repository.User, error) {
-	user, err := r.queries.GetUserByEmail(ctx, email)
+	params := generated.GetUserInternalParams{}
+
+	if id != 0 {
+		params.ID = id
+	}
+
+	if email != "" {
+		params.Email = email
+	}
+
+	if id == 0 && email == "" {
+		return nil, pkg.Errorf(pkg.INVALID_ERROR, "id or email is required")
+	}
+
+	user, err := r.queries.GetUserInternal(ctx, params)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "user not found")
@@ -77,7 +77,53 @@ func (r *UserRepo) GetUserByEmail(
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting user: %s", err.Error())
 	}
 
-	return marshalUser(user), nil
+	return &repository.User{
+		ID:           uint32(user.ID),
+		Name:         user.Name,
+		Email:        user.Email,
+		PhoneNumber:  user.PhoneNumber,
+		Password:     &user.Password,
+		IsAdmin:      user.IsAdmin,
+		RefreshToken: &user.RefreshToken,
+		CreatedAt:    user.CreatedAt,
+	}, nil
+}
+
+func (r *UserRepo) GetUser(
+	ctx context.Context,
+	id uint32,
+	email string,
+) (*repository.User, error) {
+	getUserParams := generated.GetUserParams{}
+	if id != 0 {
+		getUserParams.ID = id
+	}
+
+	if email != "" {
+		getUserParams.Email = email
+	}
+
+	if id == 0 && email == "" {
+		return nil, pkg.Errorf(pkg.INVALID_ERROR, "id or email is required")
+	}
+
+	user, err := r.queries.GetUser(ctx, getUserParams)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "user not found")
+		}
+
+		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting user: %s", err.Error())
+	}
+
+	return &repository.User{
+		ID:          uint32(user.ID),
+		Name:        user.Name,
+		Email:       user.Email,
+		PhoneNumber: user.PhoneNumber,
+		IsAdmin:     user.IsAdmin,
+		CreatedAt:   user.CreatedAt,
+	}, nil
 }
 
 func (r *UserRepo) ListUsers(
@@ -139,7 +185,7 @@ func (r *UserRepo) ListUsers(
 	usersResult := make([]*repository.User, len(users))
 	for idx, user := range users {
 		usersResult[idx] = &repository.User{
-			ID:          user.ID,
+			ID:          uint32(user.ID),
 			Name:        user.Name,
 			Email:       user.Email,
 			PhoneNumber: user.PhoneNumber,
@@ -160,7 +206,7 @@ func (r *UserRepo) UpdateUser(
 	user *repository.UpdateUser,
 ) (*repository.User, error) {
 	params := generated.UpdateUserParams{
-		ID: user.ID,
+		ID: int64(user.ID),
 	}
 
 	if user.Name != nil {
@@ -210,18 +256,12 @@ func (r *UserRepo) UpdateUser(
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error updating user: %s", err.Error())
 	}
 
-	return marshalUser(updatedUser), nil
-}
-
-func marshalUser(user generated.User) *repository.User {
 	return &repository.User{
-		ID:           user.ID,
-		Name:         user.Name,
-		Email:        user.Email,
-		PhoneNumber:  user.PhoneNumber,
-		Password:     user.Password,
-		IsAdmin:      user.IsAdmin,
-		RefreshToken: user.RefreshToken,
-		CreatedAt:    user.CreatedAt,
-	}
+		ID:          uint32(updatedUser.ID),
+		Name:        updatedUser.Name,
+		Email:       updatedUser.Email,
+		PhoneNumber: updatedUser.PhoneNumber,
+		IsAdmin:     updatedUser.IsAdmin,
+		CreatedAt:   updatedUser.CreatedAt,
+	}, nil
 }

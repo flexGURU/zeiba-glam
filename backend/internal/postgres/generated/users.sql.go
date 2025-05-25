@@ -50,32 +50,65 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
-const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, name, email, phone_number, refresh_token, password, is_admin, created_at FROM users WHERE email = $1
+const getUser = `-- name: GetUser :one
+SELECT id, name, email, phone_number, is_admin, created_at 
+FROM users 
+WHERE 
+    (
+      $1 IS NOT NULL AND id = $1
+      OR
+      $2 IS NOT NULL AND email = $2
+    )
+LIMIT 1
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
-	row := q.db.QueryRow(ctx, getUserByEmail, email)
-	var i User
+type GetUserParams struct {
+	ID    interface{} `json:"id"`
+	Email interface{} `json:"email"`
+}
+
+type GetUserRow struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Email       string    `json:"email"`
+	PhoneNumber string    `json:"phone_number"`
+	IsAdmin     bool      `json:"is_admin"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+func (q *Queries) GetUser(ctx context.Context, arg GetUserParams) (GetUserRow, error) {
+	row := q.db.QueryRow(ctx, getUser, arg.ID, arg.Email)
+	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Email,
 		&i.PhoneNumber,
-		&i.RefreshToken,
-		&i.Password,
 		&i.IsAdmin,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
-const getUserByID = `-- name: GetUserByID :one
-SELECT id, name, email, phone_number, refresh_token, password, is_admin, created_at FROM users WHERE id = $1
+const getUserInternal = `-- name: GetUserInternal :one
+SELECT id, name, email, phone_number, refresh_token, password, is_admin, created_at
+FROM users
+WHERE
+  (
+    $1 IS NOT NULL AND id = $1
+    OR
+    $2 IS NOT NULL AND email = $2
+  )
+LIMIT 1
 `
 
-func (q *Queries) GetUserByID(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRow(ctx, getUserByID, id)
+type GetUserInternalParams struct {
+	ID    interface{} `json:"id"`
+	Email interface{} `json:"email"`
+}
+
+func (q *Queries) GetUserInternal(ctx context.Context, arg GetUserInternalParams) (User, error) {
+	row := q.db.QueryRow(ctx, getUserInternal, arg.ID, arg.Email)
 	var i User
 	err := row.Scan(
 		&i.ID,

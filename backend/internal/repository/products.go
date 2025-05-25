@@ -8,7 +8,7 @@ import (
 )
 
 type Product struct {
-	ID            int64      `json:"id"`
+	ID            uint32     `json:"id"`
 	Name          string     `json:"name"`
 	Description   string     `json:"description"`
 	Price         float64    `json:"price"`
@@ -18,13 +18,13 @@ type Product struct {
 	Color         []string   `json:"color"`
 	StockQuantity int64      `json:"stock_quantity"`
 	DeletedAt     *time.Time `json:"deleted_at"`
-	UpdatedBy     int64      `json:"updated_by"`
+	UpdatedBy     uint32     `json:"updated_by"`
 	CreatedAt     time.Time  `json:"created_at"`
 }
 
 type UpdateProduct struct {
-	ID            int64     `json:"id"`
-	UpdatedBy     int64     `json:"updated_by"`
+	ID            uint32    `json:"id"`
+	UpdatedBy     uint32    `json:"updated_by"`
 	Name          *string   `json:"name"`
 	Description   *string   `json:"description"`
 	Price         *float64  `json:"price"`
@@ -47,8 +47,8 @@ type ProductFilter struct {
 
 type ProductRepository interface {
 	CreateProduct(ctx context.Context, product *Product) (*Product, error)
-	GetProductByID(ctx context.Context, id int64) (*Product, error)
-	ListProducts(ctx context.Context, filter *ProductFilter) ([]*Product, error)
+	GetProductByID(ctx context.Context, id uint32) (*Product, error)
+	ListProducts(ctx context.Context, filter *ProductFilter) ([]*Product, *pkg.Pagination, error)
 	UpdateProduct(ctx context.Context, product *UpdateProduct) (*Product, error)
-	DeleteProduct(ctx context.Context, id int64) error
+	DeleteProduct(ctx context.Context, id uint32) error
 }

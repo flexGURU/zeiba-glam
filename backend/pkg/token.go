@@ -16,7 +16,7 @@ type JWTMaker struct {
 // Payload defines the JWT payload structure
 type Payload struct {
 	ID        uuid.UUID `json:"id"`
-	UserID    int64     `json:"user_id"`
+	UserID    uint32    `json:"user_id"`
 	UserEmail string    `json:"user_email"`
 	IsAdmin   bool      `json:"is_admin"`
 	IssuedAt  time.Time `json:"issued_at"`
@@ -29,7 +29,7 @@ func NewJWTMaker(secretKey string) *JWTMaker {
 }
 
 func (maker *JWTMaker) CreateToken(
-	userID int64,
+	userID uint32,
 	email string,
 	isAdmin bool,
 	duration time.Duration,

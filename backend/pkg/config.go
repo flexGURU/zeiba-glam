@@ -11,10 +11,11 @@ type Config struct {
 	SERVER_ADDRESS         string        `mapstructure:"SERVER_ADDRESS"`
 	DATABASE_URL           string        `mapstructure:"DATABASE_URL"`
 	ENVIRONMENT            string        `mapstructure:"ENVIRONMENT"`
+	FRONTEND_URL           string        `mapstructure:"FRONTEND_URL"`
 	MIGRATION_PATH         string        `mapstructure:"MIGRATION_PATH"`
 	PASSWORD_COST          int           `mapstructure:"PASSWORD_COST"`
 	REFRESH_TOKEN_DURATION time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
-	TOKEN_DURATION         time.Duration `mapstructure:"TOKEN_DURATION"`
+	ACCESS_TOKEN_DURATION  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	REDIS_ADDRESS          string        `mapstructure:"REDIS_ADDRESS"`
 	REDIS_PASSWORD         string        `mapstructure:"REDIS_PASSWORD"`
 }

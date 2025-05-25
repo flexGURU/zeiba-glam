@@ -9,6 +9,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+var _ repository.ProductRepository = (*ProductRepo)(nil)
+
 // ProductRepo is the repository for the product model
 type ProductRepo struct {
 	queries generated.Querier
@@ -33,7 +35,7 @@ func (r *ProductRepo) CreateProduct(
 		Size:          product.Size,
 		Color:         product.Color,
 		StockQuantity: product.StockQuantity,
-		UpdatedBy:     product.UpdatedBy,
+		UpdatedBy:     int64(product.UpdatedBy),
 	})
 
 	if err != nil {
@@ -44,13 +46,14 @@ func (r *ProductRepo) CreateProduct(
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error creating product: %s", err.Error())
 	}
 
-	product.ID = productCreated.ID
+	product.ID = uint32(productCreated.ID)
+	product.CreatedAt = productCreated.CreatedAt
 
 	return product, nil
 }
 
-func (r *ProductRepo) GetProductByID(ctx context.Context, id int64) (*repository.Product, error) {
-	product, err := r.queries.GetProductByID(ctx, id)
+func (r *ProductRepo) GetProductByID(ctx context.Context, id uint32) (*repository.Product, error) {
+	product, err := r.queries.GetProductByID(ctx, int64(id))
 	if err != nil {
 		if pkg.PgxErrorCode(err) == pkg.NOT_FOUND_ERROR {
 			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "product not found")
@@ -66,48 +69,11 @@ func (r *ProductRepo) ListProducts(
 	filter *repository.ProductFilter,
 ) ([]*repository.Product, *pkg.Pagination, error) {
 	paramListProduct := generated.ListProductsParams{
-		Search: pgtype.Text{
-			Valid: false,
-		},
-		PriceFrom: pgtype.Numeric{
-			Valid: false,
-		},
-		PriceTo: pgtype.Numeric{
-			Valid: false,
-		},
-		Category: pgtype.Array[string]{
-			Valid: false,
-		},
-		Size: pgtype.Array[string]{
-			Valid: false,
-		},
-		Color: pgtype.Array[string]{
-			Valid: false,
-		},
 		Limit:  int32(filter.Pagination.PageSize),
 		Offset: pkg.Offset(filter.Pagination.Page, filter.Pagination.PageSize),
 	}
 
-	paramListProductCount := generated.ListProductsCountParams{
-		Search: pgtype.Text{
-			Valid: false,
-		},
-		PriceFrom: pgtype.Numeric{
-			Valid: false,
-		},
-		PriceTo: pgtype.Numeric{
-			Valid: false,
-		},
-		Category: pgtype.Array[string]{
-			Valid: false,
-		},
-		Size: pgtype.Array[string]{
-			Valid: false,
-		},
-		Color: pgtype.Array[string]{
-			Valid: false,
-		},
-	}
+	paramListProductCount := generated.ListProductsCountParams{}
 
 	if filter.Search != nil {
 		paramListProduct.Search = pgtype.Text{
@@ -191,8 +157,8 @@ func (r *ProductRepo) UpdateProduct(
 	product *repository.UpdateProduct,
 ) (*repository.Product, error) {
 	params := generated.UpdateProductParams{
-		ID:        product.ID,
-		UpdatedBy: product.UpdatedBy,
+		ID:        int64(product.ID),
+		UpdatedBy: int64(product.UpdatedBy),
 	}
 
 	if product.Name != nil {
@@ -244,8 +210,8 @@ func (r *ProductRepo) UpdateProduct(
 	return marshalProduct(productUpdated), nil
 }
 
-func (r *ProductRepo) DeleteProduct(ctx context.Context, id int64) error {
-	if err := r.queries.DeleteProduct(ctx, id); err != nil {
+func (r *ProductRepo) DeleteProduct(ctx context.Context, id uint32) error {
+	if err := r.queries.DeleteProduct(ctx, int64(id)); err != nil {
 		if pkg.PgxErrorCode(err) == pkg.NOT_FOUND_ERROR {
 			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "product not found")
 		}
@@ -258,7 +224,7 @@ func (r *ProductRepo) DeleteProduct(ctx context.Context, id int64) error {
 
 func marshalProduct(product generated.Product) *repository.Product {
 	p := &repository.Product{
-		ID:            product.ID,
+		ID:            uint32(product.ID),
 		Name:          product.Name,
 		Description:   product.Description,
 		Price:         pkg.PgTypeNumericToFloat64(product.Price),
@@ -268,7 +234,7 @@ func marshalProduct(product generated.Product) *repository.Product {
 		Color:         product.Color,
 		StockQuantity: product.StockQuantity,
 		DeletedAt:     nil,
-		UpdatedBy:     product.UpdatedBy,
+		UpdatedBy:     uint32(product.UpdatedBy),
 		CreatedAt:     product.CreatedAt,
 	}
 

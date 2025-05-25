@@ -33,7 +33,7 @@ CREATE TABLE "orders" (
   "total_amount" decimal(10,2) NOT NULL,
   "status" varchar(255) NOT NULL,
   "shipping_address" text NOT NULL,
-  "payment_status" varchar(255) NOT NULL,
+  "payment_status" bool NOT NULL,
   "deleted_at" timestamptz,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
@@ -55,10 +55,11 @@ CREATE TABLE "payments" (
   "id" bigserial PRIMARY KEY,
   "order_id" bigint NOT NULL,
   "transaction_id" varchar(255) NOT NULL,
-  "amount" bigint NOT NULL,
+  "amount" decimal(10,2) NOT NULL,
   "payment_method" varchar(255) NOT NULL,
-  "payment_status" varchar(255) NOT NULL,
-  "paid_at" timestamptz NOT NULL DEFAULT (now()),
+  "payment_status" bool NOT NULL DEFAULT false,
+  "paid_at" timestamptz NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
 
   CONSTRAINT "payment_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders" ("id")
 );
@@ -75,8 +76,4 @@ CREATE INDEX ON "payments" ("order_id");
 
 -- COMMENT ON COLUMN "orders"."status" IS 'pending, shipped, delivered';
 
--- COMMENT ON COLUMN "orders"."payment_status" IS 'paid, unpaid';
-
 -- COMMENT ON COLUMN "payments"."payment_method" IS 'mpesa, card';
-
--- COMMENT ON COLUMN "payments"."payment_status" IS 'paid, unpaid';

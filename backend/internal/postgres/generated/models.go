@@ -17,7 +17,7 @@ type Order struct {
 	TotalAmount     pgtype.Numeric     `json:"total_amount"`
 	Status          string             `json:"status"`
 	ShippingAddress string             `json:"shipping_address"`
-	PaymentStatus   string             `json:"payment_status"`
+	PaymentStatus   bool               `json:"payment_status"`
 	DeletedAt       pgtype.Timestamptz `json:"deleted_at"`
 	CreatedAt       time.Time          `json:"created_at"`
 }
@@ -33,13 +33,14 @@ type OrderItem struct {
 }
 
 type Payment struct {
-	ID            int64     `json:"id"`
-	OrderID       int64     `json:"order_id"`
-	TransactionID string    `json:"transaction_id"`
-	Amount        int64     `json:"amount"`
-	PaymentMethod string    `json:"payment_method"`
-	PaymentStatus string    `json:"payment_status"`
-	PaidAt        time.Time `json:"paid_at"`
+	ID            int64          `json:"id"`
+	OrderID       int64          `json:"order_id"`
+	TransactionID string         `json:"transaction_id"`
+	Amount        pgtype.Numeric `json:"amount"`
+	PaymentMethod string         `json:"payment_method"`
+	PaymentStatus bool           `json:"payment_status"`
+	PaidAt        time.Time      `json:"paid_at"`
+	CreatedAt     time.Time      `json:"created_at"`
 }
 
 type Product struct {

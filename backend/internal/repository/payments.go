@@ -8,30 +8,33 @@ import (
 )
 
 type Payment struct {
-	ID            int64     `json:"id"`
-	OrderID       int64     `json:"order_id"`
+	ID            uint32    `json:"id"`
+	OrderID       uint32    `json:"order_id"`
 	Amount        float64   `json:"amount"`
 	TransactionID string    `json:"transaction_id"`
 	PaymentMethod string    `json:"payment_method"`
-	PaymentStatus string    `json:"payment_status"`
+	PaymentStatus bool      `json:"payment_status"`
+	PaidAt        time.Time `json:"paid_at"`
 	CreatedAt     time.Time `json:"created_at"`
+
+	OrderDetails *Order `json:"order_details"`
 }
 
 type UpdatePayment struct {
-	ID            int64   `json:"id"`
-	PaymentStatus *string `json:"payment_status"`
+	ID            uint32     `json:"id"`
+	PaymentStatus *bool      `json:"payment_status"`
+	PaidAt        *time.Time `json:"paid_at"`
 }
 
 type PaymentFilter struct {
 	Pagination    *pkg.Pagination
 	PaymentMethod *string
-	PaymentStatus *string
+	PaymentStatus *bool
 }
 
 type PaymentRepository interface {
 	CreatePayment(ctx context.Context, payment *Payment) (*Payment, error)
-	GetPaymentByID(ctx context.Context, id int64) (*Payment, error)
-	GetPaymentByOrderID(ctx context.Context, orderID int64) (*Payment, error)
-	ListPayments(ctx context.Context, filter *PaymentFilter) ([]*Payment, error)
-	UpdatePayment(ctx context.Context, payment UpdatePayment) (*Payment, error)
+	GetPayment(ctx context.Context, id uint32, orderID uint32) (*Payment, error)
+	ListPayments(ctx context.Context, filter *PaymentFilter) ([]*Payment, *pkg.Pagination, error)
+	UpdatePayment(ctx context.Context, payment *UpdatePayment) (*Payment, error)
 }

@@ -3,11 +3,27 @@ INSERT INTO users (name, email, phone_number, refresh_token, password, is_admin)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 
--- name: GetUserByEmail :one
-SELECT * FROM users WHERE email = $1;
+-- name: GetUserInternal :one
+SELECT *
+FROM users
+WHERE
+  (
+    sqlc.narg('id') IS NOT NULL AND id = sqlc.narg('id')
+    OR
+    sqlc.narg('email') IS NOT NULL AND email = sqlc.narg('email')
+  )
+LIMIT 1;
 
--- name: GetUserByID :one
-SELECT * FROM users WHERE id = $1;
+-- name: GetUser :one
+SELECT id, name, email, phone_number, is_admin, created_at 
+FROM users 
+WHERE 
+    (
+      sqlc.narg('id') IS NOT NULL AND id = sqlc.narg('id')
+      OR
+      sqlc.narg('email') IS NOT NULL AND email = sqlc.narg('email')
+    )
+LIMIT 1;
 
 -- name: ListUsers :many
 SELECT 
