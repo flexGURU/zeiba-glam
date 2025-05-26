@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CommonModule } from '@angular/common';
@@ -45,7 +45,10 @@ export class ProductDetailComponent {
   cartService = inject(CartService);
   messageService = inject(MessageService);
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -106,8 +109,7 @@ export class ProductDetailComponent {
 
   buyNow(): void {
     this.addToCart();
-    // Navigate to checkout
-    // this.router.navigate(['/checkout']);
+    this.router.navigate(['/checkout']);
   }
 
   addToCart(): void {
