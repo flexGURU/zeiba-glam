@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"strings"
 
 	"github.com/flexGURU/zeiba-glam/backend/internal/postgres/generated"
 	"github.com/flexGURU/zeiba-glam/backend/internal/repository"
@@ -76,54 +77,49 @@ func (r *ProductRepo) ListProducts(
 	paramListProductCount := generated.ListProductsCountParams{}
 
 	if filter.Search != nil {
+		search := strings.ToLower(*filter.Search)
 		paramListProduct.Search = pgtype.Text{
-			String: *filter.Search,
+			String: "%" + search + "%",
 			Valid:  true,
 		}
 		paramListProductCount.Search = pgtype.Text{
-			String: *filter.Search,
+			String: "%" + search + "%",
 			Valid:  true,
 		}
 	}
 
 	if filter.PriceFrom != nil && filter.PriceTo != nil {
-		paramListProduct.PriceFrom = pkg.Float64ToPgTypeNumeric(*filter.PriceFrom)
-		paramListProduct.PriceTo = pkg.Float64ToPgTypeNumeric(*filter.PriceTo)
-		paramListProductCount.PriceFrom = pkg.Float64ToPgTypeNumeric(*filter.PriceFrom)
-		paramListProductCount.PriceTo = pkg.Float64ToPgTypeNumeric(*filter.PriceTo)
+		paramListProduct.PriceFrom = pgtype.Float8{
+			Float64: *filter.PriceFrom,
+			Valid:   true,
+		}
+		paramListProduct.PriceTo = pgtype.Float8{
+			Float64: *filter.PriceTo,
+			Valid:   true,
+		}
+		paramListProductCount.PriceFrom = pgtype.Float8{
+			Float64: *filter.PriceFrom,
+			Valid:   true,
+		}
+		paramListProductCount.PriceTo = pgtype.Float8{
+			Float64: *filter.PriceTo,
+			Valid:   true,
+		}
 	}
 
 	if filter.Category != nil {
-		paramListProduct.Category = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Category,
-		}
-		paramListProductCount.Category = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Category,
-		}
+		paramListProduct.Category = *filter.Category
+		paramListProductCount.Category = *filter.Category
 	}
 
 	if filter.Size != nil {
-		paramListProduct.Size = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Size,
-		}
-		paramListProductCount.Size = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Size,
-		}
+		paramListProduct.Size = *filter.Size
+		paramListProductCount.Size = *filter.Size
 	}
 
 	if filter.Color != nil {
-		paramListProduct.Color = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Color,
-		}
-		paramListProductCount.Color = pgtype.Array[string]{
-			Valid:    true,
-			Elements: *filter.Color,
-		}
+		paramListProduct.Color = *filter.Color
+		paramListProductCount.Color = *filter.Color
 	}
 
 	products, err := r.queries.ListProducts(ctx, paramListProduct)

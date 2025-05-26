@@ -15,19 +15,19 @@ WHERE
         OR LOWER(name) LIKE sqlc.narg('search')
     )
     AND (
-        sqlc.narg('price_from') IS NULL OR price >= sqlc.narg('price_from')
+        sqlc.narg('price_from')::float IS NULL OR price >= sqlc.narg('price_from')
     )
     AND (
-        sqlc.narg('price_to') IS NULL OR price <= sqlc.narg('price_to')
+        sqlc.narg('price_to')::float IS NULL OR price <= sqlc.narg('price_to')
     )
     AND (
-        sqlc.narg('category') IS NULL OR category && sqlc.narg('category')
+        sqlc.narg('category')::text[] IS NULL OR category && sqlc.narg('category')
     )
     AND (
-        sqlc.narg('size') IS NULL OR size && sqlc.narg('size')
+        sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')
     )
     AND (
-        sqlc.narg('color') IS NULL OR color && sqlc.narg('color')
+        sqlc.narg('color')::text[] IS NULL OR color && sqlc.narg('color')
     )
 ORDER BY created_at DESC
 LIMIT sqlc.arg('limit') OFFSET sqlc.arg('offset');
@@ -42,19 +42,19 @@ WHERE
         OR LOWER(name) LIKE sqlc.narg('search')
     )
     AND (
-        sqlc.narg('price_from') IS NULL OR price >= sqlc.narg('price_from')
+        sqlc.narg('price_from')::float IS NULL OR price >= sqlc.narg('price_from')
     )
     AND (
-        sqlc.narg('price_to') IS NULL OR price <= sqlc.narg('price_to')
+        sqlc.narg('price_to')::float IS NULL OR price <= sqlc.narg('price_to')
     )
     AND (
-        sqlc.narg('category') IS NULL OR category && sqlc.narg('category')
+        sqlc.narg('category')::text[] IS NULL OR category && sqlc.narg('category')
     )
     AND (
-        sqlc.narg('size') IS NULL OR size && sqlc.narg('size')
+        sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')
     )
     AND (
-        sqlc.narg('color') IS NULL OR color && sqlc.narg('color')
+        sqlc.narg('color')::text[] IS NULL OR color && sqlc.narg('color')
     ); 
     
 -- name: UpdateProduct :one

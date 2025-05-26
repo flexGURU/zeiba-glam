@@ -3,7 +3,7 @@ CREATE TABLE "users" (
   "name" varchar(255) NOT NULL,
   "email" varchar(255) UNIQUE NOT NULL,
   "phone_number" varchar(255) UNIQUE NOT NULL,
-  "refresh_token" text UNIQUE NOT NULL,
+  "refresh_token" text NOT NULL,
   "password" varchar(255) NOT NULL,
   "is_admin" bool NOT NULL DEFAULT false,
   "created_at" timestamptz NOT NULL DEFAULT (now())

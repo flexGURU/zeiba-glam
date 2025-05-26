@@ -24,8 +24,8 @@ type Payload struct {
 	jwt.RegisteredClaims
 }
 
-func NewJWTMaker(secretKey string) *JWTMaker {
-	return &JWTMaker{secretKey: secretKey}
+func NewJWTMaker(secretKey string) JWTMaker {
+	return JWTMaker{secretKey: secretKey}
 }
 
 func (maker *JWTMaker) CreateToken(

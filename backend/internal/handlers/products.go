@@ -8,19 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type productRequest struct {
-	Name          string   `json:"name"`
-	Description   string   `json:"description"`
-	Price         float64  `json:"price"`
-	Category      []string `json:"category"`
-	ImageURL      []string `json:"image_url"`
-	Size          []string `json:"size"`
-	Color         []string `json:"color"`
+type createProductRequest struct {
+	Name          string   `json:"name"           binding:"required"`
+	Description   string   `json:"description"    binding:"required"`
+	Price         float64  `json:"price"          binding:"required"`
+	Category      []string `json:"category"       binding:"required"`
+	ImageURL      []string `json:"image_url"      binding:"required"`
+	Size          []string `json:"size"           binding:"required"`
+	Color         []string `json:"color"          binding:"required"`
 	StockQuantity int64    `json:"stock_quantity"`
 }
 
 func (s *Server) createProductHandler(c *gin.Context) {
-	var req productRequest
+	var req createProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(pkg.Errorf(pkg.INVALID_ERROR, err.Error())))
 		return
@@ -111,22 +111,25 @@ func (s *Server) listProductsHandler(c *gin.Context) {
 		filter.PriceTo = &priceToFloat
 	}
 
-	if category := c.Query("category"); category != "" {
-		filter.Category = &[]string{category}
+	if category := c.QueryArray("category"); len(category) > 0 {
+		filter.Category = &category
 	}
 
-	if size := c.Query("size"); size != "" {
-		filter.Size = &[]string{size}
+	if size := c.QueryArray("size"); len(size) > 0 {
+		filter.Size = &size
 	}
 
-	if color := c.Query("color"); color != "" {
-		filter.Color = &[]string{color}
+	if color := c.QueryArray("color"); len(color) > 0 {
+		filter.Color = &color
 	}
 
 	pageNo, err := pkg.StringToUint32(c.DefaultQuery("page", "1"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
+	}
+	if pageNo < 1 {
+		pageNo = 1
 	}
 	filter.Pagination.Page = pageNo
 
@@ -146,8 +149,19 @@ func (s *Server) listProductsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": products, "pagination": pagination})
 }
 
+type updateProductRequest struct {
+	Name          string   `json:"name"`
+	Description   string   `json:"description"`
+	Price         float64  `json:"price"`
+	Category      []string `json:"category"`
+	ImageURL      []string `json:"image_url"`
+	Size          []string `json:"size"`
+	Color         []string `json:"color"`
+	StockQuantity int64    `json:"stock_quantity"`
+}
+
 func (s *Server) updateProductHandler(c *gin.Context) {
-	var req productRequest
+	var req updateProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(pkg.Errorf(pkg.INVALID_ERROR, err.Error())))
 		return
@@ -179,18 +193,37 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 		return
 	}
 
-	product, err := s.repo.ProductRepo.UpdateProduct(c, &repository.UpdateProduct{
-		ID:            productId,
-		UpdatedBy:     payload.UserID,
-		Name:          &req.Name,
-		Description:   &req.Description,
-		Price:         &req.Price,
-		Category:      &req.Category,
-		ImageURL:      &req.ImageURL,
-		Size:          &req.Size,
-		Color:         &req.Color,
-		StockQuantity: &req.StockQuantity,
-	})
+	updateProduct := &repository.UpdateProduct{
+		ID:        productId,
+		UpdatedBy: payload.UserID,
+	}
+
+	if req.Name != "" {
+		updateProduct.Name = &req.Name
+	}
+	if req.Description != "" {
+		updateProduct.Description = &req.Description
+	}
+	if req.Price != 0 {
+		updateProduct.Price = &req.Price
+	}
+	if len(req.Category) > 0 {
+		updateProduct.Category = &req.Category
+	}
+	if len(req.ImageURL) > 0 {
+		updateProduct.ImageURL = &req.ImageURL
+	}
+	if len(req.Size) > 0 {
+		updateProduct.Size = &req.Size
+	}
+	if len(req.Color) > 0 {
+		updateProduct.Color = &req.Color
+	}
+	if req.StockQuantity != 0 {
+		updateProduct.StockQuantity = &req.StockQuantity
+	}
+
+	product, err := s.repo.ProductRepo.UpdateProduct(c, updateProduct)
 	if err != nil {
 		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
 		return

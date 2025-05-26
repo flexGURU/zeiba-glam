@@ -103,33 +103,33 @@ WHERE
         OR LOWER(name) LIKE $1
     )
     AND (
-        $2 IS NULL OR price >= $2
+        $2::float IS NULL OR price >= $2
     )
     AND (
-        $3 IS NULL OR price <= $3
+        $3::float IS NULL OR price <= $3
     )
     AND (
-        $4 IS NULL OR category && $4
+        $4::text[] IS NULL OR category && $4
     )
     AND (
-        $5 IS NULL OR size && $5
+        $5::text[] IS NULL OR size && $5
     )
     AND (
-        $6 IS NULL OR color && $6
+        $6::text[] IS NULL OR color && $6
     )
 ORDER BY created_at DESC
 LIMIT $8 OFFSET $7
 `
 
 type ListProductsParams struct {
-	Search    interface{} `json:"search"`
-	PriceFrom interface{} `json:"price_from"`
-	PriceTo   interface{} `json:"price_to"`
-	Category  interface{} `json:"category"`
-	Size      interface{} `json:"size"`
-	Color     interface{} `json:"color"`
-	Offset    int32       `json:"offset"`
-	Limit     int32       `json:"limit"`
+	Search    interface{}   `json:"search"`
+	PriceFrom pgtype.Float8 `json:"price_from"`
+	PriceTo   pgtype.Float8 `json:"price_to"`
+	Category  []string      `json:"category"`
+	Size      []string      `json:"size"`
+	Color     []string      `json:"color"`
+	Offset    int32         `json:"offset"`
+	Limit     int32         `json:"limit"`
 }
 
 func (q *Queries) ListProducts(ctx context.Context, arg ListProductsParams) ([]Product, error) {
@@ -184,29 +184,29 @@ WHERE
         OR LOWER(name) LIKE $1
     )
     AND (
-        $2 IS NULL OR price >= $2
+        $2::float IS NULL OR price >= $2
     )
     AND (
-        $3 IS NULL OR price <= $3
+        $3::float IS NULL OR price <= $3
     )
     AND (
-        $4 IS NULL OR category && $4
+        $4::text[] IS NULL OR category && $4
     )
     AND (
-        $5 IS NULL OR size && $5
+        $5::text[] IS NULL OR size && $5
     )
     AND (
-        $6 IS NULL OR color && $6
+        $6::text[] IS NULL OR color && $6
     )
 `
 
 type ListProductsCountParams struct {
-	Search    interface{} `json:"search"`
-	PriceFrom interface{} `json:"price_from"`
-	PriceTo   interface{} `json:"price_to"`
-	Category  interface{} `json:"category"`
-	Size      interface{} `json:"size"`
-	Color     interface{} `json:"color"`
+	Search    interface{}   `json:"search"`
+	PriceFrom pgtype.Float8 `json:"price_from"`
+	PriceTo   pgtype.Float8 `json:"price_to"`
+	Category  []string      `json:"category"`
+	Size      []string      `json:"size"`
+	Color     []string      `json:"color"`
 }
 
 func (q *Queries) ListProductsCount(ctx context.Context, arg ListProductsCountParams) (int64, error) {

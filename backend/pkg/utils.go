@@ -47,7 +47,7 @@ func StringToUint32(s string) (uint32, error) {
 
 func StringToBool(s string) (bool, error) {
 	if s == "" {
-		return false, nil
+		return false, Errorf(NOT_FOUND_ERROR, "not found is_admin: %s", "empty")
 	}
 	b, err := strconv.ParseBool(s)
 	if err != nil {

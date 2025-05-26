@@ -14,6 +14,7 @@ type Config struct {
 	FRONTEND_URL           string        `mapstructure:"FRONTEND_URL"`
 	MIGRATION_PATH         string        `mapstructure:"MIGRATION_PATH"`
 	PASSWORD_COST          int           `mapstructure:"PASSWORD_COST"`
+	TOKEN_SYMMETRIC_KEY    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	REFRESH_TOKEN_DURATION time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 	ACCESS_TOKEN_DURATION  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	REDIS_ADDRESS          string        `mapstructure:"REDIS_ADDRESS"`
@@ -22,7 +23,7 @@ type Config struct {
 
 func LoadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()

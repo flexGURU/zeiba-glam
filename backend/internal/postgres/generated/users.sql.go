@@ -55,16 +55,16 @@ SELECT id, name, email, phone_number, is_admin, created_at
 FROM users 
 WHERE 
     (
-      $1 IS NOT NULL AND id = $1
+      $1::bigint IS NOT NULL AND id = $1
       OR
-      $2 IS NOT NULL AND email = $2
+      $2::text IS NOT NULL AND email = $2
     )
 LIMIT 1
 `
 
 type GetUserParams struct {
-	ID    interface{} `json:"id"`
-	Email interface{} `json:"email"`
+	ID    pgtype.Int8 `json:"id"`
+	Email pgtype.Text `json:"email"`
 }
 
 type GetUserRow struct {
@@ -95,16 +95,16 @@ SELECT id, name, email, phone_number, refresh_token, password, is_admin, created
 FROM users
 WHERE
   (
-    $1 IS NOT NULL AND id = $1
+    $1::bigint IS NOT NULL AND id = $1
     OR
-    $2 IS NOT NULL AND email = $2
+    $2::text IS NOT NULL AND email = $2
   )
 LIMIT 1
 `
 
 type GetUserInternalParams struct {
-	ID    interface{} `json:"id"`
-	Email interface{} `json:"email"`
+	ID    pgtype.Int8 `json:"id"`
+	Email pgtype.Text `json:"email"`
 }
 
 func (q *Queries) GetUserInternal(ctx context.Context, arg GetUserInternalParams) (User, error) {
