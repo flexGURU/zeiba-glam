@@ -15,6 +15,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { OrderSummaryComponent } from "../order-summary/order-summary.component";
 
 @Component({
   selector: 'app-checkout',
@@ -29,7 +30,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ReactiveFormsModule,
     FormsModule,
     InputNumberModule,
-  ],
+    OrderSummaryComponent
+],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
   providers: [MessageService],
