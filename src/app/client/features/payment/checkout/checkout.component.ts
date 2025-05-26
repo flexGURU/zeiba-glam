@@ -117,17 +117,6 @@ export class CheckoutComponent {
       return;
     }
 
-    if (this.paymentMethod === 'card') {
-      if (!this.cardDetails.number || !this.cardDetails.expiry || !this.cardDetails.cvv) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Missing Card Details',
-          detail: 'Please fill in all card details',
-        });
-        return;
-      }
-    }
-
     this.loading = true;
 
     // Simulate payment processing
@@ -143,6 +132,7 @@ export class CheckoutComponent {
 
       // Navigate to success page or home after delay
       setTimeout(() => {
+        this.paymentForm.reset();
         this.router.navigate(['/order-success']);
       }, 2000);
     }, 3000);
