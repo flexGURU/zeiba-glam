@@ -6,5 +6,5 @@ import { Injectable } from '@angular/core';
 export class FirebaseService {
   constructor() {}
 
-  uploadImage(file: File, formData: any) {}
+  uploadImage(file: File[], formData: any) {}
 }

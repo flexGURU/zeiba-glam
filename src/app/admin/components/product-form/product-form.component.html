@@ -121,23 +121,26 @@
       <label class="block text-sm font-medium mb-2">Product Image *</label>
       <div class="flex items-center space-x-4">
         <p-fileUpload
+          [multiple]="true"
           #fileUpload
           mode="basic"
           chooseLabel="Choose Image"
           accept="image/*"
-          [maxFileSize]="2000000"
+          [maxFileSize]="200000000000"
           (onSelect)="onImageSelect($event)"
           [auto]="false"
         ></p-fileUpload>
-        <div *ngIf="imagePreview" class="relative">
-          <img [src]="imagePreview" alt="Preview" class="w-20 h-20 object-cover rounded border" />
-          <button
-            type="button"
-            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-            (click)="imagePreview = null; selectedFile = null"
-          >
-            ×
-          </button>
+        <div class="flex flex-wrap gap-4" *ngIf="imagePreviews().length > 0">
+          <div *ngFor="let preview of imagePreviews(); let i = index" class="relative w-20 h-20">
+            <img [src]="preview" alt="Preview" class="w-full h-full object-cover rounded border" />
+            <button
+              type="button"
+              class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+              (click)="removeImage(i)"
+            >
+              ×
+            </button>
+          </div>
         </div>
       </div>
       <small class="text-gray-500">Maximum file size: 2MB</small>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ViewChild } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -85,8 +85,9 @@ export class ProductFormComponent {
   ];
 
   imagePreview: string | null = null;
-  selectedFile: File | null = null;
   saving = false;
+  selectedFiles = signal<File[]>([]);
+  imagePreviews = signal<string[]>([]);
 
   constructor(
     private fb: FormBuilder,
@@ -129,17 +130,26 @@ export class ProductFormComponent {
       this.resetForm();
     }
   }
-
   onImageSelect(event: any) {
-    const file = event.files[0];
-    if (file) {
-      this.selectedFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+    if (event.files && event.files.length) {
+      const newFiles: File[] = [...event.files]; // convert FileList to array
+
+      this.selectedFiles.update((files) => [...files, ...newFiles]);
+
+      for (let file of newFiles) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagePreviews.update((previews) => [...previews, reader.result as string]);
+          console.log('Image Previews:', this.imagePreviews());
+        };
+        reader.readAsDataURL(file);
+      }
     }
+  }
+
+  removeImage(index: number) {
+    this.selectedFiles.update((files) => files.filter((_, i) => i !== index));
+    this.imagePreviews.update((previews) => previews.filter((_, i) => i !== index));
   }
 
   async onSubmit() {
@@ -149,9 +159,9 @@ export class ProductFormComponent {
         const formData = this.productForm.value;
 
         // Upload image if new file selected
-        if (this.selectedFile) {
+        if (this.selectedFiles) {
           const imageUrl = await this.firebaseService.uploadImage(
-            this.selectedFile,
+            this.selectedFiles(),
             formData.name.replace(/\s+/g, '_').toLowerCase()
           );
           formData.image = imageUrl;
@@ -249,7 +259,7 @@ export class ProductFormComponent {
       bestSeller: false,
     });
     this.imagePreview = null;
-    this.selectedFile = null;
+    this.selectedFiles.set([]);
 
     // Clear the FileUpload component's internal state
     if (this.fileUpload) {
