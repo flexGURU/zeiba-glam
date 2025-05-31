@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"secret\"\n}",
+							"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"secret\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -42,8 +42,17 @@
 				{
 					"name": "refreshToken",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiODllNDM0LTNlNTgtMTFmMC1iYThlLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjMsInVzZXJfZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsImlzX2FkbWluIjp0cnVlLCJpc3N1ZWRfYXQiOiIyMDI1LTA1LTMxVDIyOjUzOjAwLjk3NzY2OTA4NyswMzowMCIsImV4cGlyZXNfYXQiOiIyMDI1LTA2LTAzVDIyOjUzOjAwLjk3NzY2OTA4NyswMzowMCIsImlzcyI6IlpFSUJBX0FQUCIsImV4cCI6MTc0ODk4MDM4MCwiaWF0IjoxNzQ4NzIxMTgwfQ.pKTEkD2FW5qJki0c0q_T_AWASXIPqXNHmwt5aSvQ1l8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:3030/api/v1/auth/refresh",
 							"host": [
@@ -88,7 +97,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test\",\n    \"email\": \"test4@gmail.com\",\n    \"phone_number\": \"0118750145\",\n    \"password\": \"secret\",\n    \"is_admin\": \"false\"\n}",
+							"raw": "{\n    \"name\": \"test\",\n    \"email\": \"test@gmail.com\",\n    \"phone_number\": \"0712345678\",\n    \"password\": \"secret\",\n    \"is_admin\": \"true\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,11 +105,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/users",
+							"raw": "https://zeiba-glam-production.up.railway.app/api/v1/users",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"zeiba-glam-production",
+								"up",
+								"railway",
+								"app"
 							],
-							"port": "3030",
 							"path": [
 								"api",
 								"v1",
@@ -137,11 +149,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/users?page=1&limit=10&is_admin=true&search=02",
+							"raw": "https://zeiba-glam-production.up.railway.app/api/v1/users?page=1&limit=10&is_admin=false",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"zeiba-glam-production",
+								"up",
+								"railway",
+								"app"
 							],
-							"port": "3030",
 							"path": [
 								"api",
 								"v1",
@@ -158,11 +173,12 @@
 								},
 								{
 									"key": "is_admin",
-									"value": "true"
+									"value": "false"
 								},
 								{
 									"key": "search",
-									"value": "02"
+									"value": "02",
+									"disabled": true
 								}
 							]
 						}
@@ -207,6 +223,16 @@
 				{
 					"name": "createProduct",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxYTVkNDk1LTNlNTgtMTFmMC1iYThlLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDUtMzFUMjI6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMDFUMDg6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzQ4NzU3MTY0LCJpYXQiOjE3NDg3MjExNjR9.vSnOblhf4b4YNG36LtGMp2WQouwCCWJpCAma-mRkhkY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
