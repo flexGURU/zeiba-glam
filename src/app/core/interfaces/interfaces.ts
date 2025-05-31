@@ -10,3 +10,14 @@ export interface Product {
   stock?: number;
   material?: string;
 }
+
+export interface RawProductPayload {
+  name: string;
+  description: string;
+  price: number;
+  category: string[];
+  image_url: string[];
+  size: string[];
+  color: string[];
+  stock_quantity: number;
+}

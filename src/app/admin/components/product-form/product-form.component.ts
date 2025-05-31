@@ -109,6 +109,11 @@ export class ProductFormComponent {
 
   ngOnChanges() {
     if (this.product) {
+      console.log('edit prod', this.product);
+      this.imagePreviews.set(this.product.image);
+      console.log(this.imagePreviews());
+      
+
       this.productForm.patchValue({
         name: this.product.name,
         price: this.product.price,

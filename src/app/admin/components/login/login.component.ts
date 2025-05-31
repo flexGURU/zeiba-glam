@@ -18,7 +18,8 @@ import { Router } from 'express';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
-import { LogoComponent } from "../../../core/components/logo/logo.component";
+import { LogoComponent } from '../../../core/components/logo/logo.component';
+import { User } from '../../services/user.interface';
 
 @Component({
   selector: 'app-login',
@@ -34,8 +35,8 @@ import { LogoComponent } from "../../../core/components/logo/logo.component";
     ToastModule,
     InputTextModule,
     CardModule,
-    LogoComponent
-],
+    LogoComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   providers: [MessageService],
@@ -50,8 +51,8 @@ export class LoginComponent {
     private messageService: MessageService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      email: ['test@gmail.com', [Validators.required, Validators.email]],
+      password: ['secret', Validators.required],
     });
   }
 
@@ -62,10 +63,12 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.getRawValue();
+    console.log(email, password);
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
         if (response) {
+          this.isLoading = false;
           this.messageService.add({
             severity: 'success',
             summary: 'Login',

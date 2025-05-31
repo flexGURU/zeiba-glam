@@ -3,6 +3,7 @@ import { AdminLayoutComponent } from '../layout/admin-layout/admin-layout.compon
 import { DashboardComponent } from '../components/dashboard/dashboard.component';
 import { ProductCatalogComponent } from '../components/product-catalog/product-catalog.component';
 import { LoginComponent } from '../components/login/login.component';
+import { authGuard } from '../guard/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,8 +11,8 @@ export const routes: Routes = [
     component: AdminLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'catalog', component: ProductCatalogComponent },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+      { path: 'catalog', component: ProductCatalogComponent, canActivate: [authGuard] },
       { path: 'login', component: LoginComponent },
     ],
   },

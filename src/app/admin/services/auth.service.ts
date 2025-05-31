@@ -1,14 +1,40 @@
 import { Injectable } from '@angular/core';
-import { User } from './user.interface';
-import { Observable, of } from 'rxjs';
+import { LoginResponse, User } from './user.interface';
+import { map, Observable, of, tap } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor() {}
+  private readonly apiURL = environment.baseURL;
+  private static readonly accessKey = 'JWT_ACCESS_KEY';
 
-  login(email: string, password: string): Observable<User | null> {
-    return of(null);
+  constructor(private http: HttpClient) {}
+
+  get jwt(): string {
+    return sessionStorage.getItem(AuthService.accessKey) ?? '';
+  }
+
+  private set jwt(value: string) {
+    sessionStorage.setItem(AuthService.accessKey, value);
+  }
+
+  login(email: string, password: string): Observable<LoginResponse> {
+    const login = this.http
+      .post<LoginResponse>(`${this.apiURL}/auth/login`, { email, password })
+      .pipe(
+        tap((resp) => {
+          console.log('ssss', resp);
+          this.jwt = resp.data.access_token;
+        })
+      );
+
+    return login;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.jwt;
   }
 }

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { Product } from '../interfaces/interfaces';
+import { environment } from '../../../environments/environment.development';
+import { response } from 'express';
 
 export interface ProductCategory {
   name: string;
@@ -14,6 +16,7 @@ export interface ProductCategory {
 export class ProductService {
   private productsUrl = 'products.json';
   private categoriesUrl = 'assets/images/categories/data/categories.json';
+  private readonly apiURL = environment.baseURL;
 
   constructor(private http: HttpClient) {}
   getAllProducts(): Observable<Product[]> {
@@ -48,27 +51,6 @@ export class ProductService {
     );
   }
 
-  // getFeaturedProducts(): Observable<Product[]> {
-  //   return this.getAllProducts().pipe(
-  //     map((products) => products.filter((product) => product.featured)),
-  //     catchError(this.handleError)
-  //   );
-  // }
-
-  // getNewArrivals(): Observable<Product[]> {
-  //   return this.getAllProducts().pipe(
-  //     map((products) => products.filter((product) => product.new === true)),
-  //     catchError(this.handleError)
-  //   );
-  // }
-
-  // getBestSellers(): Observable<Product[]> {
-  //   return this.getAllProducts().pipe(
-  //     map((products) => products.filter((product) => product.bestSeller)),
-  //     catchError(this.handleError)
-  //   );
-  // }
-
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(() => new Error('Something went wrong. Please try again later.'));
@@ -77,10 +59,16 @@ export class ProductService {
   updateProduct(product: Product): Observable<Product | null> {
     return of(null);
   }
-  addProduct(product: Product): Observable<Product | null> {
-    console.log('aaddddeedd');
-    
-    return of(null);
+  addProduct(productData: Product): Observable<Product | null> {
+    const product = this.http.post<Product>(`${this.apiURL}/products`, productData);
+
+    product.pipe(
+      map((response) => {
+        console.log('data from backend', response);
+      })
+    );
+
+    return product;
   }
   deleteProduct(productId: string): Observable<Product | null> {
     return of(null);

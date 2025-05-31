@@ -5,10 +5,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../../core/interfaces/interfaces';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-product-preview',
-  imports: [DialogModule, CommonModule, InputNumberModule, FormsModule, RouterLink],
+  imports: [DialogModule, CommonModule, InputNumberModule, FormsModule, RouterLink, ButtonModule],
   templateUrl: './product-preview.component.html',
   styleUrl: './product-preview.component.css',
 })

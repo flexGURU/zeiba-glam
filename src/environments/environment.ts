@@ -8,4 +8,5 @@ export const environment = {
     appId: '1:276744140541:web:0c063fc302739fb88ef094',
     measurementId: 'G-FQSG2SFQSF',
   },
+  baseURL: 'https://zeiba-glam-production.up.railway.app/api/v1',
 };
