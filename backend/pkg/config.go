@@ -21,25 +21,37 @@ type Config struct {
 	REDIS_PASSWORD         string        `mapstructure:"REDIS_PASSWORD"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
+func LoadConfig(path string) (Config, error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
+	setDefaults()
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
-	}
-
-	if err = viper.Unmarshal(&config); err != nil {
+	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Println("Config file not found")
+			log.Println("Config file not found, using environment variables")
 		} else {
-			return
+			return Config{}, Errorf(INTERNAL_ERROR, "failed to read config: %s", err.Error())
 		}
 	}
 
-	return
+	var config Config
+
+	return config, viper.Unmarshal(&config)
+}
+
+func setDefaults() {
+	viper.SetDefault("SERVER_ADDRESS", "")
+	viper.SetDefault("DATABASE_URL", "")
+	viper.SetDefault("ENVIRONMENT", "")
+	viper.SetDefault("FRONTEND_URL", "")
+	viper.SetDefault("MIGRATION_PATH", "")
+	viper.SetDefault("PASSWORD_COST", 0)
+	viper.SetDefault("TOKEN_SYMMETRIC_KEY", "")
+	viper.SetDefault("REFRESH_TOKEN_DURATION", 0)
+	viper.SetDefault("ACCESS_TOKEN_DURATION", 0)
+	viper.SetDefault("REDIS_ADDRESS", "")
+	viper.SetDefault("REDIS_PASSWORD", "")
 }
