@@ -14,7 +14,7 @@ FROM alpine:3.19
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrate ./migrate
 COPY --from=builder /app/internal/postgres/migrations /app/migrations
-COPY --from=builder /app/.envs/.production/config.env /app/config.env
+# COPY --from=builder /app/.envs/.production/config.env /app/config.env
 
 EXPOSE 3030
 
