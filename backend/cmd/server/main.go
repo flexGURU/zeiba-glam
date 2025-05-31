@@ -19,9 +19,10 @@ func main() {
 	signal.Notify(quit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	// /home/emilio-cliff/zeiba-glam/backend/.envs/.local
+	// /app/
 
 	// load config
-	config, err := pkg.LoadConfig("/app/")
+	config, err := pkg.LoadConfig("/home/emilio-cliff/zeiba-glam/backend/.envs/.local")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}

@@ -48,27 +48,27 @@ func (s *Server) setUpRoutes() {
 	s.router.Use(CORSmiddleware(s.config.FRONTEND_URL))
 	v1 := s.router.Group("/api/v1")
 
-	// v1Auth := s.router.Group("/api/v1")
-	// authRoute := v1Auth.Use(authMiddleware(s.tokenMaker))
+	v1Auth := s.router.Group("/api/v1")
+	authRoute := v1Auth.Use(authMiddleware(s.tokenMaker))
 	v1.GET("/health", s.healthCheckHandler)
 
 	// auth routes
 	v1.POST("/auth/login", s.loginUserHandler)
-	v1.GET("/auth/refresh", s.refreshTokenHandler)
+	v1.POST("/auth/refresh", s.refreshTokenHandler)
 	v1.GET("/auth/logout", s.logoutUserHandler)
 
 	// users routes
-	v1.POST("/users", s.createUserHandler)
-	v1.GET("/users/:id", s.getUserHandler)
-	v1.GET("/users", s.listUsersHandler)
-	v1.PATCH("/users/:id", s.updateUserHandler)
+	authRoute.POST("/users", s.createUserHandler)
+	authRoute.GET("/users/:id", s.getUserHandler)
+	authRoute.GET("/users", s.listUsersHandler)
+	authRoute.PATCH("/users/:id", s.updateUserHandler)
 
 	// products routes
-	v1.POST("/products", s.createProductHandler)
-	v1.GET("/products/:id", s.getProductHandler)
-	v1.GET("/products", s.listProductsHandler)
-	v1.PATCH("/products/:id", s.updateProductHandler)
-	v1.DELETE("/products/:id", s.deleteProductHandler)
+	authRoute.POST("/products", s.createProductHandler)
+	authRoute.GET("/products/:id", s.getProductHandler)
+	authRoute.GET("/products", s.listProductsHandler)
+	authRoute.PATCH("/products/:id", s.updateProductHandler)
+	authRoute.DELETE("/products/:id", s.deleteProductHandler)
 
 	// orders routes
 	v1.POST("/orders", s.createOrderHandler)

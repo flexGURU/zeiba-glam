@@ -111,15 +111,15 @@ func (s *Server) loginUserHandler(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie(
-		"refreshToken",
-		refreshToken,
-		int(s.config.REFRESH_TOKEN_DURATION),
-		"/",
-		"",
-		true,
-		true,
-	)
+	// c.SetCookie(
+	// 	"refreshToken",
+	// 	refreshToken,
+	// 	int(s.config.REFRESH_TOKEN_DURATION),
+	// 	"/",
+	// 	"",
+	// 	true,
+	// 	true,
+	// )
 
 	_, err = s.repo.UserRepo.UpdateUser(c, &repository.UpdateUser{
 		ID:           user.ID,
@@ -136,14 +136,24 @@ func (s *Server) loginUserHandler(c *gin.Context) {
 	}})
 }
 
+type refreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 func (s *Server) refreshTokenHandler(c *gin.Context) {
-	refreshToken, err := c.Cookie("refreshToken")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	var req refreshTokenRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(pkg.Errorf(pkg.INVALID_ERROR, err.Error())))
 		return
 	}
 
-	payload, err := s.tokenMaker.VerifyToken(refreshToken)
+	// refreshToken, err := c.Cookie("refreshToken")
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// 	return
+	// }
+
+	payload, err := s.tokenMaker.VerifyToken(req.RefreshToken)
 	if err != nil {
 		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
 		return
@@ -239,19 +249,32 @@ func (s *Server) updateUserHandler(c *gin.Context) {
 		return
 	}
 
-	refreshToken, err := c.Cookie("refreshToken")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// refreshToken, err := c.Cookie("refreshToken")
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// 	return
+	// }
+
+	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
+	// if err != nil {
+	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	// 	return
+	// }
+	payload, ok := c.Get(authorizationPayloadKey)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
+
 		return
 	}
 
-	payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	if err != nil {
-		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	payloadData, ok := payload.(*pkg.Payload)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "incorrect token"})
+
 		return
 	}
 
-	if payload.UserID != userId && !payload.IsAdmin {
+	if payloadData.UserID != userId && !payloadData.IsAdmin {
 		c.JSON(http.StatusForbidden, gin.H{"message": "You are not authorized to update this user"})
 		return
 	}
@@ -273,7 +296,7 @@ func (s *Server) updateUserHandler(c *gin.Context) {
 	}
 
 	if req.Password != "" {
-		if payload.UserID != userId && payload.IsAdmin {
+		if payloadData.UserID != userId && payloadData.IsAdmin {
 			c.JSON(
 				http.StatusForbidden,
 				gin.H{"message": "You are not authorized to update this user"},
@@ -289,7 +312,7 @@ func (s *Server) updateUserHandler(c *gin.Context) {
 	}
 
 	if req.IsAdmin != "" {
-		if payload.IsAdmin {
+		if payloadData.IsAdmin {
 			isAdmin, err := pkg.StringToBool(req.IsAdmin)
 			if err != nil {
 				c.JSON(http.StatusBadRequest, errorResponse(err))

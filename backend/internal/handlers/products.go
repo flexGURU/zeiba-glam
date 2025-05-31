@@ -26,19 +26,32 @@ func (s *Server) createProductHandler(c *gin.Context) {
 		return
 	}
 
-	refreshToken, err := c.Cookie("refreshToken")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// refreshToken, err := c.Cookie("refreshToken")
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// 	return
+	// }
+
+	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
+	// if err != nil {
+	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	// 	return
+	// }
+	payload, ok := c.Get(authorizationPayloadKey)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
+
 		return
 	}
 
-	payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	if err != nil {
-		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	payloadData, ok := payload.(*pkg.Payload)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "incorrect token"})
+
 		return
 	}
 
-	if !payload.IsAdmin {
+	if !payloadData.IsAdmin {
 		c.JSON(http.StatusForbidden, gin.H{"message": "You are not authorized to create a product"})
 		return
 	}
@@ -52,7 +65,7 @@ func (s *Server) createProductHandler(c *gin.Context) {
 		Size:          req.Size,
 		Color:         req.Color,
 		StockQuantity: req.StockQuantity,
-		UpdatedBy:     payload.UserID,
+		UpdatedBy:     payloadData.UserID,
 	})
 	if err != nil {
 		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
@@ -173,19 +186,32 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 		return
 	}
 
-	refreshToken, err := c.Cookie("refreshToken")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// refreshToken, err := c.Cookie("refreshToken")
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// 	return
+	// }
+
+	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
+	// if err != nil {
+	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	// 	return
+	// }
+	payload, ok := c.Get(authorizationPayloadKey)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
+
 		return
 	}
 
-	payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	if err != nil {
-		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	payloadData, ok := payload.(*pkg.Payload)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "incorrect token"})
+
 		return
 	}
 
-	if !payload.IsAdmin {
+	if !payloadData.IsAdmin {
 		c.JSON(
 			http.StatusForbidden,
 			gin.H{"message": "You are not authorized to update this product"},
@@ -195,7 +221,7 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 
 	updateProduct := &repository.UpdateProduct{
 		ID:        productId,
-		UpdatedBy: payload.UserID,
+		UpdatedBy: payloadData.UserID,
 	}
 
 	if req.Name != "" {
@@ -239,19 +265,33 @@ func (s *Server) deleteProductHandler(c *gin.Context) {
 		return
 	}
 
-	refreshToken, err := c.Cookie("refreshToken")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// refreshToken, err := c.Cookie("refreshToken")
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
+	// 	return
+	// }
+
+	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
+	// if err != nil {
+	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	// 	return
+	// }
+
+	payload, ok := c.Get(authorizationPayloadKey)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
+
 		return
 	}
 
-	payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	if err != nil {
-		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+	payloadData, ok := payload.(*pkg.Payload)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "incorrect token"})
+
 		return
 	}
 
-	if !payload.IsAdmin {
+	if !payloadData.IsAdmin {
 		c.JSON(
 			http.StatusForbidden,
 			gin.H{"message": "You are not authorized to delete this product"},
