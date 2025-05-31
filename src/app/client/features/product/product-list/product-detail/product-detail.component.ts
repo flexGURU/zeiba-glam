@@ -12,7 +12,7 @@ import { TabsModule } from 'primeng/tabs';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { ProductRelatedComponent } from '../../product-related/product-related.component';
-import { Product } from '../../../../../core/services/interfaces';
+import { Product } from '../../../../../core/interfaces/interfaces';
 import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
@@ -85,26 +85,7 @@ export class ProductDetailComponent {
 
   private loadRelatedProducts(): void {
     // In a real app, this would be fetched from a service
-    this.relatedProducts = [
-      {
-        id: '2',
-        name: 'Casual Denim Jeans',
-        price: 3999,
-        category: 'Clothing',
-        image: 'assets/images/jeans.jpg',
-        description: 'Classic denim jeans with perfect fit',
-        bestSeller: true,
-      },
-      {
-        id: '3',
-        name: 'Hooded Sweatshirt',
-        price: 2499,
-        category: 'Clothing',
-        image: 'assets/images/hoodie.jpg',
-        description: 'Warm and comfortable hooded sweatshirt',
-        new: true,
-      },
-    ];
+    this.relatedProducts = [];
   }
 
   buyNow(): void {

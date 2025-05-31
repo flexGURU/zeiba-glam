@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from '../../../core/services/interfaces';
+import { Product } from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -74,23 +74,25 @@ export class ProductCatalogComponent {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.productService.deleteProduct(product.id).subscribe({
-          next: () => {
-            this.loadProducts();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Product deleted',
-            });
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete product',
-            });
-          },
-        });
+        if (product.id) {
+          this.productService.deleteProduct(product.id).subscribe({
+            next: () => {
+              this.loadProducts();
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Product deleted',
+              });
+            },
+            error: () => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete product',
+              });
+            },
+          });
+        }
       },
     });
   }

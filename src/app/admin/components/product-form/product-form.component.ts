@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Product } from '../../../core/services/interfaces';
+import { Product } from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { FirebaseService } from '../../services/firebase.service';
 import { ButtonModule } from 'primeng/button';
@@ -84,7 +84,6 @@ export class ProductFormComponent {
     { label: 'Books', value: 'books' },
   ];
 
-  imagePreview: string | null = null;
   saving = false;
   selectedFiles = signal<File[]>([]);
   imagePreviews = signal<string[]>([]);
@@ -104,9 +103,7 @@ export class ProductFormComponent {
       material: [''],
       colors: [[]],
       sizes: [[]],
-      featured: [false],
-      new: [false],
-      bestSeller: [false],
+      images: [this.imagePreviews()],
     });
   }
 
@@ -121,11 +118,7 @@ export class ProductFormComponent {
         material: this.product.material || '',
         colors: this.product.colors || [],
         sizes: this.product.sizes || [],
-        featured: this.product.featured || false,
-        new: this.product.new || false,
-        bestSeller: this.product.bestSeller || false,
       });
-      this.imagePreview = this.product.image;
     } else {
       this.resetForm();
     }
@@ -135,6 +128,7 @@ export class ProductFormComponent {
       const newFiles: File[] = [...event.files]; // convert FileList to array
 
       this.selectedFiles.update((files) => [...files, ...newFiles]);
+      console.log('seletcted images', this.selectedFiles());
 
       for (let file of newFiles) {
         const reader = new FileReader();
@@ -153,89 +147,58 @@ export class ProductFormComponent {
   }
 
   async onSubmit() {
-    if (this.productForm.valid) {
-      this.saving = true;
-      try {
-        const formData = this.productForm.value;
+    this.saving = true;
+    if (!this.productForm.valid) return;
+    const productData: Product = {
+      name: this.productForm.value.name,
+      price: this.productForm.value.price,
+      category: this.productForm.value.category,
+      image: [],
+      description: this.productForm.value.description,
+      colors: this.productForm.value.colors,
+      sizes: this.productForm.value.sizes,
+      stock: this.productForm.value.stock,
+    };
 
-        // Upload image if new file selected
-        if (this.selectedFiles) {
-          const imageUrl = await this.firebaseService.uploadImage(
-            this.selectedFiles(),
-            formData.name.replace(/\s+/g, '_').toLowerCase()
-          );
-          formData.image = imageUrl;
-        } else if (this.product?.image) {
-          formData.image = this.product.image;
-        } else {
-          // If no image is provided, set a default or handle accordingly
-          formData.image = '';
-        }
+    try {
+      const imageUrls = await this.firebaseService.uploadImages(this.selectedFiles());
+      productData.image = imageUrls;
 
-        const productData: Product = {
-          id: this.product?.id || this.generateId(),
-          name: formData.name,
-          price: formData.price,
-          category: formData.category,
-          image: formData.image,
-          description: formData.description,
-          stock: formData.stock,
-          material: formData.material || undefined,
-          colors: formData.colors?.length > 0 ? formData.colors : undefined,
-          sizes: formData.sizes?.length > 0 ? formData.sizes : undefined,
-          featured: formData.featured || undefined,
-          new: formData.new || undefined,
-          bestSeller: formData.bestSeller || undefined,
-        };
+      console.log('form data', productData);
 
-        if (this.product) {
-          this.productService.updateProduct(productData).subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'Product updated successfully',
-              });
-              this.save.emit(productData);
-              this.resetForm();
-            },
-            error: () => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to update product',
-              });
-            },
+      const saveFn = this.product
+        ? this.productService.updateProduct(productData)
+        : this.productService.addProduct(productData);
+
+      saveFn.subscribe({
+        next: () => {
+          this.saving = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: this.product ? 'Product updated successfully' : 'Product added successfully',
           });
-        } else {
-          this.productService.addProduct(productData).subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'Product added successfully',
-              });
-              this.save.emit(productData);
-              this.resetForm();
-            },
-            error: () => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to add product',
-              });
-            },
+          this.save.emit(productData);
+          this.resetForm();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: this.product ? 'Failed to update product' : 'Failed to add product',
           });
-        }
-      } catch (error) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to upload image',
-        });
-      }
-      this.saving = false;
+        },
+      });
+    } catch (error) {
+      console.error('Upload failed', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload Error',
+        detail: 'Image upload failed',
+      });
     }
+
+    this.saving = false;
   }
 
   onHide() {
@@ -245,29 +208,13 @@ export class ProductFormComponent {
   }
 
   private resetForm() {
-    this.productForm.reset({
-      name: '',
-      price: 0,
-      category: '',
-      description: '',
-      stock: 0,
-      material: '',
-      colors: [],
-      sizes: [],
-      featured: false,
-      new: false,
-      bestSeller: false,
-    });
-    this.imagePreview = null;
+    this.productForm.reset({});
+    this.imagePreviews.set([]);
     this.selectedFiles.set([]);
 
     // Clear the FileUpload component's internal state
     if (this.fileUpload) {
       this.fileUpload.clear();
     }
-  }
-
-  private generateId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
-import { Product } from '../../../../core/services/interfaces';
+import { Product } from '../../../../core/interfaces/interfaces';
 import { ProductService } from '../../../../core/services/product.service';
 
 @Component({
@@ -35,18 +35,18 @@ export class NewArrivalComponent {
   ngOnInit(): void {
     console.log('new arrivals');
 
-    this.loadNewArrivals();
+    // this.loadNewArrivals();
     console.log('new arrivals');
   }
 
-  loadNewArrivals(): void {
-    this.productService.getNewArrivals().subscribe({
-      next: (products) => {
-        this.newArrivals = products.slice(0, 8);
-      },
-      error: (error) => {
-        console.error('Error loading new arrivals:', error);
-      },
-    });
-  }
+//   loadNewArrivals(): void {
+//     this.productService.getNewArrivals().subscribe({
+//       next: (products) => {
+//         this.newArrivals = products.slice(0, 8);
+//       },
+//       error: (error) => {
+//         console.error('Error loading new arrivals:', error);
+//       },
+//     });
+//   }
 }

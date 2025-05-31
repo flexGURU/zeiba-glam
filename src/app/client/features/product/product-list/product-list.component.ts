@@ -10,7 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CartService } from '../../../../core/services/cart.service';
 import { ProductPreviewComponent } from '../product-preview/product-preview.component';
-import { Product } from '../../../../core/services/interfaces';
+import { Product } from '../../../../core/interfaces/interfaces';
 import { ProductService } from '../../../../core/services/product.service';
 import { ButtonModule } from 'primeng/button';
 

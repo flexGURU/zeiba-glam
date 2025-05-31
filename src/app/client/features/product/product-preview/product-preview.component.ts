@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Product } from '../../../../core/services/interfaces';
+import { Product } from '../../../../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-product-preview',

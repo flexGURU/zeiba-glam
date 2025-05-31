@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, throwError } from 'rxjs';
-import { Product } from './interfaces';
+import { Product } from '../interfaces/interfaces';
 
 export interface ProductCategory {
   name: string;
@@ -48,26 +48,26 @@ export class ProductService {
     );
   }
 
-  getFeaturedProducts(): Observable<Product[]> {
-    return this.getAllProducts().pipe(
-      map((products) => products.filter((product) => product.featured)),
-      catchError(this.handleError)
-    );
-  }
+  // getFeaturedProducts(): Observable<Product[]> {
+  //   return this.getAllProducts().pipe(
+  //     map((products) => products.filter((product) => product.featured)),
+  //     catchError(this.handleError)
+  //   );
+  // }
 
-  getNewArrivals(): Observable<Product[]> {
-    return this.getAllProducts().pipe(
-      map((products) => products.filter((product) => product.new === true)),
-      catchError(this.handleError)
-    );
-  }
+  // getNewArrivals(): Observable<Product[]> {
+  //   return this.getAllProducts().pipe(
+  //     map((products) => products.filter((product) => product.new === true)),
+  //     catchError(this.handleError)
+  //   );
+  // }
 
-  getBestSellers(): Observable<Product[]> {
-    return this.getAllProducts().pipe(
-      map((products) => products.filter((product) => product.bestSeller)),
-      catchError(this.handleError)
-    );
-  }
+  // getBestSellers(): Observable<Product[]> {
+  //   return this.getAllProducts().pipe(
+  //     map((products) => products.filter((product) => product.bestSeller)),
+  //     catchError(this.handleError)
+  //   );
+  // }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
@@ -78,6 +78,8 @@ export class ProductService {
     return of(null);
   }
   addProduct(product: Product): Observable<Product | null> {
+    console.log('aaddddeedd');
+    
     return of(null);
   }
   deleteProduct(productId: string): Observable<Product | null> {
