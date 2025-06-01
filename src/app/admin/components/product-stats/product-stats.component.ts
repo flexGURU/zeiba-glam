@@ -1,26 +1,19 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
-import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { ProductCatalogComponent } from '../product-catalog/product-catalog.component';
-import { MessageService } from 'primeng/api';
-import { ProductStatsComponent } from '../product-stats/product-stats.component';
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [CommonModule, ProductCatalogComponent, ButtonModule, ProductStatsComponent],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
-  providers: [MessageService],
+  selector: 'app-product-stats',
+  imports: [],
+  templateUrl: './product-stats.component.html',
+  styleUrl: './product-stats.component.css',
 })
-export class DashboardComponent {
+export class ProductStatsComponent {
   stats = {
     totalProducts: 0,
     inStock: 0,
     lowStock: 0,
     outOfStock: 0,
   };
-
   constructor(private productService: ProductService) {}
 
   ngOnInit() {

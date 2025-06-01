@@ -7,12 +7,12 @@
 
   <p-table
     [value]="products"
-    [paginator]="true"
+    sortField="price"
+    [paginator]="products.length > 10"
     [rows]="pageSize"
     [totalRecords]="totalRecords"
     [loading]="loading"
     [globalFilterFields]="['name', 'category']"
-    [lazy]="true"
     (onPage)="onPageChange($event)"
     #dt
   >
@@ -36,7 +36,7 @@
         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
         <th pSortableColumn="price">Price (Kes) <p-sortIcon field="price"></p-sortIcon></th>
         <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-        <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
+        <th pSortableColumn="stock_quantity">Stock <p-sortIcon field="stock_quantity"></p-sortIcon></th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -44,7 +44,11 @@
     <ng-template pTemplate="body" let-product>
       <tr>
         <td>
-          <img [src]="product.image_url" [alt]="product.name" class="w-12 h-12 object-cover rounded" />
+          <img
+            [src]="product.image_url"
+            [alt]="product.name"
+            class="w-12 h-12 object-cover rounded"
+          />
         </td>
         <td>{{ product.name }}</td>
         <td>{{ product.price }}</td>
@@ -52,7 +56,7 @@
         <td>
           <p-tag
             [value]="product.stock_quantity?.toString() || '0'"
-            [severity]="getStockSeverity(product.stock || 0)"
+            [severity]="getStockSeverity(product.stock_quantity || 0)"
           >
           </p-tag>
         </td>
