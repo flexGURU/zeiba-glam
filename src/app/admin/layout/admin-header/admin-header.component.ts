@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LogoComponent } from '../../../core/components/logo/logo.component';
 import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-header',
@@ -9,5 +10,8 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './admin-header.component.css',
 })
 export class AdminHeaderComponent {
-  logOut() {}
+  constructor(private authService: AuthService) {}
+  logOut() {
+    this.authService.logout();
+  }
 }

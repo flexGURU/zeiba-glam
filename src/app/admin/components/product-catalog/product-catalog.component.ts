@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from '../../../core/interfaces/interfaces';
+import { PaginationParams, Product, RawProductPayload } from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -24,11 +24,19 @@ import { InputText } from 'primeng/inputtext';
   providers: [ConfirmationService, MessageService],
 })
 export class ProductCatalogComponent {
-  products: Product[] = [];
+  products: RawProductPayload[] = [];
   loading = false;
   showDialog = false;
-  selectedProduct: Product | null = null;
+  selectedProduct: RawProductPayload | null = null;
   quickViewVisible: boolean = false;
+
+  totalRecords = 0;
+  currentPage = 1;
+  pageSize = 10;
+
+  searchTerm = '';
+  sortField = '';
+  sortOrder: 'asc' | 'desc' = 'asc';
 
   constructor(
     private productService: ProductService,
@@ -42,12 +50,22 @@ export class ProductCatalogComponent {
 
   loadProducts() {
     this.loading = true;
-    this.productService.getAllProducts().subscribe({
-      next: (products) => {
-        this.products = products;
+
+    const params: PaginationParams = {
+      page: this.currentPage,
+      limit: this.pageSize,
+      search: this.searchTerm || undefined,
+      sortBy: this.sortField || undefined,
+      sortOrder: this.sortOrder,
+    };
+
+    this.productService.getPagintedProducts(params).subscribe({
+      next: (response) => {
+        this.products = response.data;
+        this.totalRecords = response.totalRecords;
         this.loading = false;
       },
-      error: () => {
+      error: (error) => {
         this.loading = false;
         this.messageService.add({
           severity: 'error',
@@ -58,13 +76,45 @@ export class ProductCatalogComponent {
     });
   }
 
+  // Handle pagination events from PrimeNG table
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1; // PrimeNG uses 0-based indexing
+    this.pageSize = event.rows;
+    this.loadProducts();
+  }
+
+  // Handle sorting events
+  onSort(event: any) {
+    this.sortField = event.field;
+    this.sortOrder = event.order === 1 ? 'asc' : 'desc';
+    this.currentPage = 1; // Reset to first page when sorting
+    this.loadProducts();
+  }
+
+  // Handle search/filter
+  onGlobalFilter(event: any) {
+    this.searchTerm = event.target.value;
+    this.currentPage = 1; // Reset to first page when searching
+    // Add debounce to avoid too many API calls
+    this.debounceSearch();
+  }
+
+  private searchTimeout: any;
+  private debounceSearch() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.loadProducts();
+    }, 500); // 500ms delay
+  }
+
   showAddDialog() {
     this.selectedProduct = null;
     this.showDialog = true;
   }
 
-  editProduct(product: Product) {
+  editProduct(product: RawProductPayload) {
     this.selectedProduct = { ...product };
+
     this.showDialog = true;
   }
 

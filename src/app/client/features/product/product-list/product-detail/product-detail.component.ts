@@ -34,7 +34,7 @@ import { ProductService } from '../../../../../core/services/product.service';
   providers: [MessageService],
 })
 export class ProductDetailComponent {
-  productId!: string;
+  productId!: number;
   product!: Product;
   selectedColor: string = '';
   selectedSize: string = '';
@@ -60,7 +60,7 @@ export class ProductDetailComponent {
     this.loadRelatedProducts();
   }
 
-  getProductById = (id: string) => {
+  getProductById = (id: number) => {
     this.productService.getProductById(id).subscribe((response) => {
       this.product = response;
       console.log('got', this.product);

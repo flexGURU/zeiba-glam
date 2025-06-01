@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Product } from '../../../core/interfaces/interfaces';
+import { Product, RawProductPayload } from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { FirebaseService } from '../../services/firebase.service';
 import { ButtonModule } from 'primeng/button';
@@ -20,10 +20,12 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-product-form',
   imports: [
+    ToastModule,
     SelectModule,
     ButtonModule,
     CheckboxModule,
@@ -42,7 +44,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 })
 export class ProductFormComponent {
   @Input() visible = false;
-  @Input() product: Product | null = null;
+  @Input() product: RawProductPayload | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<Product>();
 
@@ -109,20 +111,18 @@ export class ProductFormComponent {
 
   ngOnChanges() {
     if (this.product) {
-      console.log('edit prod', this.product);
-      this.imagePreviews.set(this.product.image);
+      this.imagePreviews.set(this.product.image_url);
       console.log(this.imagePreviews());
-      
 
       this.productForm.patchValue({
         name: this.product.name,
         price: this.product.price,
         category: this.product.category,
         description: this.product.description,
-        stock: this.product.stock || 0,
+        stock: this.product.stock_quantity || 0,
         material: this.product.material || '',
-        colors: this.product.colors || [],
-        sizes: this.product.sizes || [],
+        colors: this.product.color || [],
+        sizes: this.product.size || [],
       });
     } else {
       this.resetForm();
@@ -133,13 +133,11 @@ export class ProductFormComponent {
       const newFiles: File[] = [...event.files]; // convert FileList to array
 
       this.selectedFiles.update((files) => [...files, ...newFiles]);
-      console.log('seletcted images', this.selectedFiles());
 
       for (let file of newFiles) {
         const reader = new FileReader();
         reader.onload = () => {
           this.imagePreviews.update((previews) => [...previews, reader.result as string]);
-          console.log('Image Previews:', this.imagePreviews());
         };
         reader.readAsDataURL(file);
       }
@@ -169,10 +167,8 @@ export class ProductFormComponent {
       const imageUrls = await this.firebaseService.uploadImages(this.selectedFiles());
       productData.image = imageUrls;
 
-      console.log('form data', productData);
-
       const saveFn = this.product
-        ? this.productService.updateProduct(productData)
+        ? this.productService.updateProduct(this.product?.id, productData)
         : this.productService.addProduct(productData);
 
       saveFn.subscribe({
@@ -217,7 +213,6 @@ export class ProductFormComponent {
     this.imagePreviews.set([]);
     this.selectedFiles.set([]);
 
-    // Clear the FileUpload component's internal state
     if (this.fileUpload) {
       this.fileUpload.clear();
     }

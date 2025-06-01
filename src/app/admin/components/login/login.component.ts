@@ -14,12 +14,12 @@ import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 import { AuthService } from '../../services/auth.service';
-import { Router } from 'express';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { LogoComponent } from '../../../core/components/logo/logo.component';
 import { User } from '../../services/user.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +48,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {
     this.loginForm = this.fb.group({
       email: ['test@gmail.com', [Validators.required, Validators.email]],
@@ -78,7 +78,11 @@ export class LoginComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error.message,
+        });
       },
     });
   }

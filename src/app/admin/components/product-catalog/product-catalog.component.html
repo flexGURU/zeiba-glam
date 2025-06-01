@@ -1,16 +1,19 @@
+<!-- product-catalog.component.html -->
 <div class="p-6">
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold">Products</h2>
-    <p-button label="Add Product" icon="pi pi-plus" (onClick)="showAddDialog()" class="">
-    </p-button>
+    <p-button label="Add Product" icon="pi pi-plus" (onClick)="showAddDialog()"> </p-button>
   </div>
 
   <p-table
     [value]="products"
     [paginator]="true"
-    [rows]="10"
+    [rows]="pageSize"
+    [totalRecords]="totalRecords"
     [loading]="loading"
     [globalFilterFields]="['name', 'category']"
+    [lazy]="true"
+    (onPage)="onPageChange($event)"
     #dt
   >
     <ng-template pTemplate="caption">
@@ -20,7 +23,7 @@
           <input
             pInputText
             type="text"
-            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            (input)="onGlobalFilter($event)"
             placeholder="Search products..."
           />
         </span>
@@ -33,7 +36,7 @@
         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
         <th pSortableColumn="price">Price (Kes) <p-sortIcon field="price"></p-sortIcon></th>
         <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-        <th>Stock</th>
+        <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -41,14 +44,14 @@
     <ng-template pTemplate="body" let-product>
       <tr>
         <td>
-          <img [src]="product.image" [alt]="product.name" class="w-12 h-12 object-cover rounded" />
+          <img [src]="product.image_url" [alt]="product.name" class="w-12 h-12 object-cover rounded" />
         </td>
         <td>{{ product.name }}</td>
         <td>{{ product.price }}</td>
         <td>{{ product.category }}</td>
         <td>
           <p-tag
-            [value]="product.stock?.toString() || '0'"
+            [value]="product.stock_quantity?.toString() || '0'"
             [severity]="getStockSeverity(product.stock || 0)"
           >
           </p-tag>
@@ -66,9 +69,22 @@
               icon="pi pi-trash"
               class="p-button-rounded p-button-text p-button-danger"
               pTooltip="Delete"
+              severity="danger"
               (onClick)="deleteProduct(product)"
             >
             </p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty state template -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center py-8">
+          <div class="flex flex-col items-center">
+            <i class="pi pi-inbox text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-500">No products found</p>
           </div>
         </td>
       </tr>
@@ -79,7 +95,6 @@
     [(visible)]="showDialog"
     [product]="selectedProduct"
     (save)="onProductSave($event)"
-    [(visible)]="quickViewVisible"
   >
   </app-product-form>
 
