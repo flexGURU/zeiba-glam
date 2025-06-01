@@ -11,7 +11,7 @@ type Config struct {
 	SERVER_ADDRESS         string        `mapstructure:"SERVER_ADDRESS"`
 	DATABASE_URL           string        `mapstructure:"DATABASE_URL"`
 	ENVIRONMENT            string        `mapstructure:"ENVIRONMENT"`
-	FRONTEND_URL           string        `mapstructure:"FRONTEND_URL"`
+	FRONTEND_URL           []string      `mapstructure:"FRONTEND_URL"`
 	MIGRATION_PATH         string        `mapstructure:"MIGRATION_PATH"`
 	PASSWORD_COST          int           `mapstructure:"PASSWORD_COST"`
 	TOKEN_SYMMETRIC_KEY    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`

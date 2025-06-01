@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/flexGURU/zeiba-glam/backend/pkg"
@@ -68,19 +69,12 @@ func authMiddleware(maker pkg.JWTMaker) gin.HandlerFunc {
 	}
 }
 
-func CORSmiddleware(frontendUrl string) gin.HandlerFunc {
-	allowedOrigins := []string{
-		frontendUrl,
-	}
-
+func CORSmiddleware(frontendUrls []string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		origin := ctx.Request.Header.Get("Origin")
 
-		for _, allowedOrigin := range allowedOrigins {
-			if origin == allowedOrigin {
-				ctx.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-				break
-			}
+		if slices.Contains(frontendUrls, origin) {
+			ctx.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
 		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
