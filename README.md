@@ -1,60 +1,29 @@
 # ZeibaGlam
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
+E-commerce applicatiopn built using angular and Go.
+---
+# Integrations
+Mpesa Payments
+Angular Tanstack Query for Backend server state synchronisation
+Prime-ng UI
+High use of signals for better reactivity
 
-## Development server
+## zeiba-glam-
+## Admin
+![image](https://github.com/user-attachments/assets/6d0efd37-eeae-4245-a1ef-2805600dbc58)
 
-To start a local development server, run:
+![image](https://github.com/user-attachments/assets/7139c166-62d5-4f99-b173-f41f26ffcb48)
+![image](https://github.com/user-attachments/assets/78ebac06-29ba-476d-b7ea-7b4fa1d359b4)
+---
+## Client
+![image](https://github.com/user-attachments/assets/aa739dc4-074a-4ee6-8813-d73206cd28d0)
+User can filter based on requirements. This is effectivly enhanced using signals which enhance reactivity.
 
-```bash
-ng serve
-```
+![image](https://github.com/user-attachments/assets/ddc3b7a7-62cd-487f-9216-5ac3d55e313e)
+![image](https://github.com/user-attachments/assets/55fc0c3e-ef56-4c2a-8bcc-5903f0c47596)
+## Payment Page
+![image](https://github.com/user-attachments/assets/26c35b2e-d8c7-4916-8d90-b60236a206d5)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# zeiba-glam-
