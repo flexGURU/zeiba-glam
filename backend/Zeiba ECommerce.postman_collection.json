@@ -149,14 +149,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://zeiba-glam-production.up.railway.app/api/v1/users?page=1&limit=10&is_admin=false",
-							"protocol": "https",
+							"raw": "localhost:3030/api/v1/users?page=1&limit=10&is_admin=true",
 							"host": [
-								"zeiba-glam-production",
-								"up",
-								"railway",
-								"app"
+								"localhost"
 							],
+							"port": "3030",
 							"path": [
 								"api",
 								"v1",
@@ -172,13 +169,13 @@
 									"value": "10"
 								},
 								{
-									"key": "is_admin",
-									"value": "false"
-								},
-								{
 									"key": "search",
 									"value": "02",
 									"disabled": true
+								},
+								{
+									"key": "is_admin",
+									"value": "true"
 								}
 							]
 						}
@@ -192,7 +189,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // \"name\": \"cliff1\",\n    // \"email\": \"wemilio1@gmail.com\"\n    // \"phone_number\": \"\",\n    // \"password\": \"hello1\"\n    \"is_admin\": \"false\"\n}",
+							"raw": "{\n    // \"name\": \"cliff1\",\n    // \"email\": \"wemilio1@gmail.com\"\n    // \"phone_number\": \"\",\n    // \"password\": \"hello1\"\n    \"is_admin\": \"true\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -223,21 +220,11 @@
 				{
 					"name": "createProduct",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxYTVkNDk1LTNlNTgtMTFmMC1iYThlLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDUtMzFUMjI6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMDFUMDg6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzQ4NzU3MTY0LCJpYXQiOjE3NDg3MjExNjR9.vSnOblhf4b4YNG36LtGMp2WQouwCCWJpCAma-mRkhkY",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Crochet Tote Bag\",\n  \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n  \"price\": 29.50,\n  \"category\": [\"accessories\", \"bags\", \"handmade\"],\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\"],\n  \"color\": [\"green\", \"cream\"],\n  \"stock_quantity\": 15\n}\n",
+							"raw": "{\n  \"name\": \"Crochet Tote Bag\",\n  \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n  \"price\": 29.50,\n  \"category\": 3,\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\"],\n  \"color\": [\"green\", \"cream\"],\n  \"stock_quantity\": 15\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,7 +252,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/products/2",
+							"raw": "localhost:3030/api/v1/products/15",
 							"host": [
 								"localhost"
 							],
@@ -274,7 +261,7 @@
 								"api",
 								"v1",
 								"products",
-								"2"
+								"15"
 							]
 						}
 					},
@@ -298,7 +285,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/products?page=1&limit=10",
+							"raw": "localhost:3030/api/v1/products?page=1&limit=10&category=shoes&category=shirts&category=bags",
 							"host": [
 								"localhost"
 							],
@@ -316,6 +303,18 @@
 								{
 									"key": "limit",
 									"value": "10"
+								},
+								{
+									"key": "category",
+									"value": "shoes"
+								},
+								{
+									"key": "category",
+									"value": "shirts"
+								},
+								{
+									"key": "category",
+									"value": "bags"
 								}
 							]
 						}
@@ -323,13 +322,13 @@
 					"response": []
 				},
 				{
-					"name": "updateProducts",
+					"name": "updateProduct",
 					"request": {
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n//   \"name\": \"Handmade Crochet Socked\"\n//   \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n//   \"price\": 29.50,\n//   \"category\": [\"accessories\", \"bags\", \"handmade\"],\n//   \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\",\"xl\"],\n  \"color\": [\"green\", \"cream\", \"blue\"],\n  \"stock_quantity\": 30\n}\n",
+							"raw": "{\n//   \"name\": \"Handmade Crochet Socked\",\n//   \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n//   \"price\": 34.99,\n//   \"category\": 2,\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\",\"xl\"],\n  \"color\": [\"green\"],\n  \"stock_quantity\": 30\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -337,7 +336,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/products/5",
+							"raw": "localhost:3030/api/v1/products/12",
 							"host": [
 								"localhost"
 							],
@@ -346,14 +345,14 @@
 								"api",
 								"v1",
 								"products",
-								"5"
+								"12"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "deleteProducts",
+					"name": "deleteProduct",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -460,6 +459,111 @@
 					"request": {
 						"method": "GET",
 						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "createCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"shirts\",\n    \"description\": \"These are just shirts\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategory",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"name\": \"bags\"\n    \"description\": \"These are just bag\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						}
 					},
 					"response": []
 				}
