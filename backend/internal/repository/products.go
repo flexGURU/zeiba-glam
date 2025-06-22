@@ -12,7 +12,7 @@ type Product struct {
 	Name          string     `json:"name"`
 	Description   string     `json:"description"`
 	Price         float64    `json:"price"`
-	Category      []string   `json:"category"`
+	Category      string     `json:"category"`
 	ImageURL      []string   `json:"image_url"`
 	Size          []string   `json:"size"`
 	Color         []string   `json:"color"`
@@ -28,7 +28,7 @@ type UpdateProduct struct {
 	Name          *string   `json:"name"`
 	Description   *string   `json:"description"`
 	Price         *float64  `json:"price"`
-	Category      *[]string `json:"category"`
+	Category      *string   `json:"category"`
 	ImageURL      *[]string `json:"image_url"`
 	Size          *[]string `json:"size"`
 	Color         *[]string `json:"color"`

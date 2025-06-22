@@ -65,10 +65,16 @@ func (s *Server) setUpRoutes() {
 
 	// products routes
 	authRoute.POST("/products", s.createProductHandler)
-	authRoute.GET("/products/:id", s.getProductHandler)
-	authRoute.GET("/products", s.listProductsHandler)
+	v1.GET("/products/:id", s.getProductHandler)
+	v1.GET("/products", s.listProductsHandler)
 	authRoute.PATCH("/products/:id", s.updateProductHandler)
 	authRoute.DELETE("/products/:id", s.deleteProductHandler)
+
+	// categories route
+	authRoute.POST("/categories", s.createCategoryHandler)
+	v1.GET("/categories/:id", s.getCategoryHandler)
+	v1.GET("/categories", s.listCategoriesHandler)
+	authRoute.PATCH("/categories/:id", s.updateCategoryHandler)
 
 	// orders routes
 	v1.POST("/orders", s.createOrderHandler)

@@ -28,17 +28,19 @@ func NewStore(config pkg.Config) *Store {
 
 // PostgresRepo is the struct that holds the repositories for the database
 type PostgresRepo struct {
-	UserRepo    repository.UserRepository
-	ProductRepo repository.ProductRepository
-	OrderRepo   repository.OrderRepository
-	PaymentRepo repository.PaymentRepository
+	UserRepo     repository.UserRepository
+	ProductRepo  repository.ProductRepository
+	OrderRepo    repository.OrderRepository
+	PaymentRepo  repository.PaymentRepository
+	CategoryRepo repository.CategoryRepository
 }
 
 func NewPostgresRepo(store *Store) *PostgresRepo {
 	return &PostgresRepo{
-		UserRepo:    NewUserRepo(store),
-		ProductRepo: NewProductRepo(store),
-		PaymentRepo: NewPaymentRepo(store),
+		UserRepo:     NewUserRepo(store),
+		ProductRepo:  NewProductRepo(store),
+		PaymentRepo:  NewPaymentRepo(store),
+		CategoryRepo: NewCategoryRepo(store),
 		// OrderRepo:     NewOrderRepo(store),
 	}
 }

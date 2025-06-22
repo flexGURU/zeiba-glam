@@ -9,18 +9,22 @@ import (
 )
 
 type Querier interface {
+	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateOrder(ctx context.Context, arg CreateOrderParams) (Order, error)
 	CreatePayment(ctx context.Context, arg CreatePaymentParams) (Payment, error)
 	CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DeleteCategory(ctx context.Context, id int64) error
 	DeleteOrder(ctx context.Context, id int64) error
 	DeleteProduct(ctx context.Context, id int64) error
+	GetCategory(ctx context.Context, id int64) (Category, error)
 	GetOrderByID(ctx context.Context, id int64) (Order, error)
 	GetPayment(ctx context.Context, arg GetPaymentParams) (GetPaymentRow, error)
 	GetPaymentsOverviewByOrderID(ctx context.Context, orderID int64) ([]Payment, error)
 	GetProductByID(ctx context.Context, id int64) (Product, error)
 	GetUser(ctx context.Context, arg GetUserParams) (GetUserRow, error)
 	GetUserInternal(ctx context.Context, arg GetUserInternalParams) (User, error)
+	ListCategories(ctx context.Context) ([]Category, error)
 	ListOrderItems(ctx context.Context, orderID int64) ([]OrderItem, error)
 	ListOrders(ctx context.Context, arg ListOrdersParams) ([]Order, error)
 	ListOrdersCount(ctx context.Context, arg ListOrdersCountParams) (int64, error)
@@ -44,9 +48,11 @@ type Querier interface {
 	ListProductsCount(ctx context.Context, arg ListProductsCountParams) (int64, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]ListUsersRow, error)
 	ListUsersCount(ctx context.Context, arg ListUsersCountParams) (int64, error)
+	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
 	UpdateOrder(ctx context.Context, arg UpdateOrderParams) (Order, error)
 	UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (Payment, error)
 	UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error)
+	UpdateProductCategory(ctx context.Context, arg UpdateProductCategoryParams) error
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }
 

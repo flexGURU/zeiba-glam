@@ -12,7 +12,7 @@ type createProductRequest struct {
 	Name          string   `json:"name"           binding:"required"`
 	Description   string   `json:"description"    binding:"required"`
 	Price         float64  `json:"price"          binding:"required"`
-	Category      []string `json:"category"       binding:"required"`
+	Category      int64    `json:"category"       binding:"required"`
 	ImageURL      []string `json:"image_url"      binding:"required"`
 	Size          []string `json:"size"           binding:"required"`
 	Color         []string `json:"color"          binding:"required"`
@@ -26,17 +26,6 @@ func (s *Server) createProductHandler(c *gin.Context) {
 		return
 	}
 
-	// refreshToken, err := c.Cookie("refreshToken")
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
-	// 	return
-	// }
-
-	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	// if err != nil {
-	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
-	// 	return
-	// }
 	payload, ok := c.Get(authorizationPayloadKey)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
@@ -56,11 +45,17 @@ func (s *Server) createProductHandler(c *gin.Context) {
 		return
 	}
 
+	category, err := s.repo.CategoryRepo.GetCategory(c, uint32(req.Category))
+	if err != nil {
+		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+		return
+	}
+
 	product, err := s.repo.ProductRepo.CreateProduct(c, &repository.Product{
 		Name:          req.Name,
 		Description:   req.Description,
 		Price:         req.Price,
-		Category:      req.Category,
+		Category:      category.Name,
 		ImageURL:      req.ImageURL,
 		Size:          req.Size,
 		Color:         req.Color,
@@ -166,7 +161,7 @@ type updateProductRequest struct {
 	Name          string   `json:"name"`
 	Description   string   `json:"description"`
 	Price         float64  `json:"price"`
-	Category      []string `json:"category"`
+	Category      int64    `json:"category"`
 	ImageURL      []string `json:"image_url"`
 	Size          []string `json:"size"`
 	Color         []string `json:"color"`
@@ -186,17 +181,6 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 		return
 	}
 
-	// refreshToken, err := c.Cookie("refreshToken")
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
-	// 	return
-	// }
-
-	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	// if err != nil {
-	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
-	// 	return
-	// }
 	payload, ok := c.Get(authorizationPayloadKey)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
@@ -233,8 +217,13 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 	if req.Price != 0 {
 		updateProduct.Price = &req.Price
 	}
-	if len(req.Category) > 0 {
-		updateProduct.Category = &req.Category
+	if req.Category != 0 {
+		category, err := s.repo.CategoryRepo.GetCategory(c, uint32(req.Category))
+		if err != nil {
+			c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+			return
+		}
+		updateProduct.Category = &category.Name
 	}
 	if len(req.ImageURL) > 0 {
 		updateProduct.ImageURL = &req.ImageURL

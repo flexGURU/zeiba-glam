@@ -6,6 +6,11 @@ RETURNING *;
 -- name: GetProductByID :one
 SELECT * FROM products WHERE id = $1;
 
+-- name: UpdateProductCategory :exec
+UPDATE products
+SET category = sqlc.arg('new_category')
+WHERE category = sqlc.arg('old_category');
+
 -- name: ListProducts :many
 SELECT * FROM products
 WHERE
@@ -21,7 +26,7 @@ WHERE
         sqlc.narg('price_to')::float IS NULL OR price <= sqlc.narg('price_to')
     )
     AND (
-        sqlc.narg('category')::text[] IS NULL OR category && sqlc.narg('category')
+        sqlc.narg('category')::text[] IS NULL OR category = ANY(sqlc.narg('category')::text[])
     )
     AND (
         sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')
@@ -48,7 +53,7 @@ WHERE
         sqlc.narg('price_to')::float IS NULL OR price <= sqlc.narg('price_to')
     )
     AND (
-        sqlc.narg('category')::text[] IS NULL OR category && sqlc.narg('category')
+        sqlc.narg('category')::text[] IS NULL OR category = ANY(sqlc.narg('category')::text[])
     )
     AND (
         sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')

@@ -21,7 +21,7 @@ type CreateProductParams struct {
 	Name          string         `json:"name"`
 	Description   string         `json:"description"`
 	Price         pgtype.Numeric `json:"price"`
-	Category      []string       `json:"category"`
+	Category      string         `json:"category"`
 	ImageUrl      []string       `json:"image_url"`
 	Size          []string       `json:"size"`
 	Color         []string       `json:"color"`
@@ -109,7 +109,7 @@ WHERE
         $3::float IS NULL OR price <= $3
     )
     AND (
-        $4::text[] IS NULL OR category && $4
+        $4::text[] IS NULL OR category = ANY($4::text[])
     )
     AND (
         $5::text[] IS NULL OR size && $5
@@ -190,7 +190,7 @@ WHERE
         $3::float IS NULL OR price <= $3
     )
     AND (
-        $4::text[] IS NULL OR category && $4
+        $4::text[] IS NULL OR category = ANY($4::text[])
     )
     AND (
         $5::text[] IS NULL OR size && $5
@@ -243,7 +243,7 @@ type UpdateProductParams struct {
 	Name          pgtype.Text    `json:"name"`
 	Description   pgtype.Text    `json:"description"`
 	Price         pgtype.Numeric `json:"price"`
-	Category      []string       `json:"category"`
+	Category      pgtype.Text    `json:"category"`
 	ImageUrl      []string       `json:"image_url"`
 	Size          []string       `json:"size"`
 	Color         []string       `json:"color"`
@@ -280,4 +280,20 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const updateProductCategory = `-- name: UpdateProductCategory :exec
+UPDATE products
+SET category = $1
+WHERE category = $2
+`
+
+type UpdateProductCategoryParams struct {
+	NewCategory string `json:"new_category"`
+	OldCategory string `json:"old_category"`
+}
+
+func (q *Queries) UpdateProductCategory(ctx context.Context, arg UpdateProductCategoryParams) error {
+	_, err := q.db.Exec(ctx, updateProductCategory, arg.NewCategory, arg.OldCategory)
+	return err
 }

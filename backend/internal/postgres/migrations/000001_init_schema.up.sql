@@ -14,7 +14,7 @@ CREATE TABLE "products" (
   "name" varchar(255) NOT NULL,
   "description" text NOT NULL,
   "price" decimal(10,2) NOT NULL DEFAULT 0,
-  "category" text[] NOT NULL DEFAULT '{}',
+  "category" varchar(255) NOT NULL,
   "image_url" text[] NOT NULL DEFAULT '{}',
   "size" text[] NOT NULL DEFAULT '{}',
   "color" text[] NOT NULL DEFAULT '{}',
@@ -24,6 +24,13 @@ CREATE TABLE "products" (
   "created_at" timestamptz NOT NULL DEFAULT (now()),
 
   CONSTRAINT "products_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "users" ("id")
+);
+
+CREATE TABLE "categories" (
+  "id" bigserial PRIMARY KEY,
+  "name" varchar(255) NOT NULL,
+  "description" text NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "orders" (

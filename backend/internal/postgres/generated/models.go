@@ -10,6 +10,13 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Category struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
 type Order struct {
 	ID              int64              `json:"id"`
 	UserName        string             `json:"user_name"`
@@ -48,7 +55,7 @@ type Product struct {
 	Name          string             `json:"name"`
 	Description   string             `json:"description"`
 	Price         pgtype.Numeric     `json:"price"`
-	Category      []string           `json:"category"`
+	Category      string             `json:"category"`
 	ImageUrl      []string           `json:"image_url"`
 	Size          []string           `json:"size"`
 	Color         []string           `json:"color"`

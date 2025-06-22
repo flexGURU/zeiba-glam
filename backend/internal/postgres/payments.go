@@ -2,6 +2,8 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/flexGURU/zeiba-glam/backend/internal/postgres/generated"
 	"github.com/flexGURU/zeiba-glam/backend/internal/repository"
@@ -68,7 +70,7 @@ func (r *PaymentRepo) GetPayment(
 
 	payment, err := r.queries.GetPayment(ctx, getPaymentParams)
 	if err != nil {
-		if pkg.PgxErrorCode(err) == pkg.NOT_FOUND_ERROR {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "payment not found")
 		}
 

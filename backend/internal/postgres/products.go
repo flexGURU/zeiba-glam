@@ -2,6 +2,8 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/flexGURU/zeiba-glam/backend/internal/postgres/generated"
@@ -56,7 +58,7 @@ func (r *ProductRepo) CreateProduct(
 func (r *ProductRepo) GetProductByID(ctx context.Context, id uint32) (*repository.Product, error) {
 	product, err := r.queries.GetProductByID(ctx, int64(id))
 	if err != nil {
-		if pkg.PgxErrorCode(err) == pkg.NOT_FOUND_ERROR {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "product not found")
 		}
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting product by id: %s", err.Error())
@@ -176,7 +178,10 @@ func (r *ProductRepo) UpdateProduct(
 	}
 
 	if product.Category != nil {
-		params.Category = *product.Category
+		params.Category = pgtype.Text{
+			String: *product.Category,
+			Valid:  true,
+		}
 	}
 
 	if product.ImageURL != nil {
@@ -208,7 +213,7 @@ func (r *ProductRepo) UpdateProduct(
 
 func (r *ProductRepo) DeleteProduct(ctx context.Context, id uint32) error {
 	if err := r.queries.DeleteProduct(ctx, int64(id)); err != nil {
-		if pkg.PgxErrorCode(err) == pkg.NOT_FOUND_ERROR {
+		if errors.Is(err, sql.ErrNoRows) {
 			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "product not found")
 		}
 
