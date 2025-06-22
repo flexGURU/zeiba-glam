@@ -90,6 +90,9 @@ func (s *Server) setUpRoutes() {
 	v1.GET("/payments", s.listPaymentsHandler)
 	v1.PATCH("/payments/:id", s.updatePaymentHandler)
 
+	// helpers route
+	authRoute.GET("/helpers/dashboard-stats", s.getDashboardStatsHandler)
+
 	s.srv = &http.Server{
 		Addr:         s.config.SERVER_ADDRESS,
 		Handler:      s.router.Handler(),

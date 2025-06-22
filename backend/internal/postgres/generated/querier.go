@@ -18,6 +18,7 @@ type Querier interface {
 	DeleteOrder(ctx context.Context, id int64) error
 	DeleteProduct(ctx context.Context, id int64) error
 	GetCategory(ctx context.Context, id int64) (Category, error)
+	GetDashboardStats(ctx context.Context) (GetDashboardStatsRow, error)
 	GetOrderByID(ctx context.Context, id int64) (Order, error)
 	GetPayment(ctx context.Context, arg GetPaymentParams) (GetPaymentRow, error)
 	GetPaymentsOverviewByOrderID(ctx context.Context, orderID int64) ([]Payment, error)

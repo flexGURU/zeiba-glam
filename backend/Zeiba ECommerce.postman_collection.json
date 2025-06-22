@@ -285,7 +285,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/products?page=1&limit=10&category=shoes&category=shirts&category=bags",
+							"raw": "localhost:3030/api/v1/products?page=1&limit=30&category=shoes&category=shirts&category=bags",
 							"host": [
 								"localhost"
 							],
@@ -302,7 +302,7 @@
 								},
 								{
 									"key": "limit",
-									"value": "10"
+									"value": "30"
 								},
 								{
 									"key": "category",
@@ -562,6 +562,32 @@
 								"v1",
 								"categories",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Helpers",
+			"item": [
+				{
+					"name": "getDashboardStats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/helpers/dashboard-stats",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"helpers",
+								"dashboard-stats"
 							]
 						}
 					},

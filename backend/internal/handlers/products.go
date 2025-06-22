@@ -254,18 +254,6 @@ func (s *Server) deleteProductHandler(c *gin.Context) {
 		return
 	}
 
-	// refreshToken, err := c.Cookie("refreshToken")
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "Refresh token not found"})
-	// 	return
-	// }
-
-	// payload, err := s.tokenMaker.VerifyToken(refreshToken)
-	// if err != nil {
-	// 	c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
-	// 	return
-	// }
-
 	payload, ok := c.Get(authorizationPayloadKey)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "missing token"})

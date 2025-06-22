@@ -33,6 +33,7 @@ type PostgresRepo struct {
 	OrderRepo    repository.OrderRepository
 	PaymentRepo  repository.PaymentRepository
 	CategoryRepo repository.CategoryRepository
+	HelperRepo   repository.HelperRepository
 }
 
 func NewPostgresRepo(store *Store) *PostgresRepo {
@@ -41,6 +42,7 @@ func NewPostgresRepo(store *Store) *PostgresRepo {
 		ProductRepo:  NewProductRepo(store),
 		PaymentRepo:  NewPaymentRepo(store),
 		CategoryRepo: NewCategoryRepo(store),
+		HelperRepo:   NewHelperRepo(store),
 		// OrderRepo:     NewOrderRepo(store),
 	}
 }
