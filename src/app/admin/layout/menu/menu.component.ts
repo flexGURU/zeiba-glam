@@ -14,6 +14,11 @@ export class MenuComponent {
   ngOnInit() {
     this.items = [
       {
+        label: 'Category',
+        icon: 'pi pi-folder',
+        routerLink: 'category',
+      },
+      {
         label: 'Dashboard',
         icon: 'pi pi-home',
         routerLink: 'dashboard',
