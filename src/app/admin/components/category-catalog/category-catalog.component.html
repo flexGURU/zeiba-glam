@@ -1,0 +1,102 @@
+<!-- category-catalog.component.html -->
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Categories</h2>
+    <p-button label="Add category" icon="pi pi-plus" (onClick)="showAddDialog()"> </p-button>
+  </div>
+
+  <p-table
+    [value]="categories"
+    sortField="price"
+    [paginator]="categories.length > 10"
+    [loading]="loading"
+    [globalFilterFields]="['name', 'category']"
+    (onPage)="onPageChange($event)"
+    #dt
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex justify-between items-center">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search mr-2"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalFilter($event)"
+            placeholder="Search categories..."
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="stock_quantity">
+          Stock <p-sortIcon field="stock_quantity"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-category>
+      <tr>
+        <td>
+          <img
+            [src]="category.image_url"
+            [alt]="category.name"
+            class="w-12 h-12 object-cover rounded"
+          />
+        </td>
+        <td>{{ category.name }}</td>
+        <td>{{ category.price }}</td>
+        <td>{{ category.category }}</td>
+        <td>
+          <p-tag
+            [value]="category.stock_quantity?.toString() || '0'"
+            [severity]="getStockSeverity(category.stock_quantity || 0)"
+          >
+          </p-tag>
+        </td>
+        <td>
+          <div class="flex flex-col lg:flex-row">
+            <p-button
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text p-button-success mr-2 mb-2"
+              pTooltip="Edit"
+              (onClick)="editCategory(category)"
+            >
+            </p-button>
+            <p-button
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Delete"
+              severity="danger"
+              (onClick)="deleteCategory(category)"
+            >
+            </p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty state template -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center py-8">
+          <div class="flex flex-col items-center">
+            <i class="pi pi-inbox text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-500">No categories found</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-category-form
+    [(visible)]="showDialog"
+    [category]="selectedCategory"
+    (save)="onProductSave($event)"
+  />
+
+  <p-confirmDialog></p-confirmDialog>
+</div>
