@@ -1,5 +1,5 @@
 DATABASE_URL=postgres://backend:secret@localhost:5432/zeiba?sslmode=disable
-MIGRATIONS_PATH=file:///home/emilio-cliff/zeiba-glam/backend/internal/postgres/migrations
+MIGRATIONS_PATH=file:///Users/devops/cliff-projects/zeiba-glam/backend/internal/postgres/migrations
 
 test:
 	go test -v ./...
@@ -25,7 +25,7 @@ mock:
 	mockgen -package mockdb -destination ./internal/postgres/mockdb/mock.go github.com/flexGURU/zeiba-glam/backend/internal/postgres/generated Querier
 
 createMigrate:
-	migrate create -ext sql -dir internal/postgres/migrations -seq $(NAME)
+	migrate create -ext sql -dir ./internal/postgres/migrations/ -seq $(NAME)
 
 migrateUp:
 	migrate -source ${MIGRATIONS_PATH} -database ${DATABASE_URL} -verbose up

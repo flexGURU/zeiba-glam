@@ -13,6 +13,7 @@ type createProductRequest struct {
 	Description   string   `json:"description"    binding:"required"`
 	Price         float64  `json:"price"          binding:"required"`
 	Category      int64    `json:"category"       binding:"required"`
+	SubCategory   int64    `json:"sub_category"   binding:"required"`
 	ImageURL      []string `json:"image_url"      binding:"required"`
 	Size          []string `json:"size"           binding:"required"`
 	Color         []string `json:"color"          binding:"required"`
@@ -51,11 +52,18 @@ func (s *Server) createProductHandler(c *gin.Context) {
 		return
 	}
 
+	subcategory, err := s.repo.SubCategoryRepo.GetSubCategoryByCategoryIDAndID(c, uint32(req.Category), uint32(req.SubCategory))
+	if err != nil {
+		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+		return
+	}
+
 	product, err := s.repo.ProductRepo.CreateProduct(c, &repository.Product{
 		Name:          req.Name,
 		Description:   req.Description,
 		Price:         req.Price,
 		Category:      category.Name,
+		SubCategory:   subcategory.Name,
 		ImageURL:      req.ImageURL,
 		Size:          req.Size,
 		Color:         req.Color,
@@ -123,6 +131,10 @@ func (s *Server) listProductsHandler(c *gin.Context) {
 		filter.Category = &category
 	}
 
+	if subCategory := c.QueryArray("sub_category"); len(subCategory) > 0 {
+		filter.SubCategory = &subCategory
+	}
+
 	if size := c.QueryArray("size"); len(size) > 0 {
 		filter.Size = &size
 	}
@@ -162,6 +174,7 @@ type updateProductRequest struct {
 	Description   string   `json:"description"`
 	Price         float64  `json:"price"`
 	Category      int64    `json:"category"`
+	SubCategory   int64    `json:"sub_category"`
 	ImageURL      []string `json:"image_url"`
 	Size          []string `json:"size"`
 	Color         []string `json:"color"`
@@ -217,14 +230,26 @@ func (s *Server) updateProductHandler(c *gin.Context) {
 	if req.Price != 0 {
 		updateProduct.Price = &req.Price
 	}
-	if req.Category != 0 {
+	if req.Category != 0 && req.SubCategory != 0 {
 		category, err := s.repo.CategoryRepo.GetCategory(c, uint32(req.Category))
 		if err != nil {
 			c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
 			return
 		}
+
+		subcategory, err := s.repo.SubCategoryRepo.GetSubCategoryByCategoryIDAndID(c, uint32(req.Category), uint32(req.SubCategory))
+		if err != nil {
+			c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+			return
+		}
+
 		updateProduct.Category = &category.Name
+		updateProduct.SubCategory = &subcategory.Name
+	} else if req.Category != 0 || req.SubCategory != 0 {
+		c.JSON(http.StatusBadRequest, errorResponse(pkg.Errorf(pkg.INVALID_ERROR, "both category and sub-category must be provided together")))
+		return
 	}
+
 	if len(req.ImageURL) > 0 {
 		updateProduct.ImageURL = &req.ImageURL
 	}

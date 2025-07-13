@@ -18,11 +18,8 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	// /home/emilio-cliff/zeiba-glam/backend/.envs/.local
-	// /app/
-
 	// load config
-	config, err := pkg.LoadConfig("/home/emilio-cliff/zeiba-glam/backend/.envs/.local")
+	config, err := pkg.LoadConfig("/Users/devops/cliff-projects/zeiba-glam/backend/.envs/.local")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}

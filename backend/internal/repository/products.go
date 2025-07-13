@@ -13,6 +13,7 @@ type Product struct {
 	Description   string     `json:"description"`
 	Price         float64    `json:"price"`
 	Category      string     `json:"category"`
+	SubCategory   string     `json:"sub_category,omitempty"` // Optional, for convenience
 	ImageURL      []string   `json:"image_url"`
 	Size          []string   `json:"size"`
 	Color         []string   `json:"color"`
@@ -29,6 +30,7 @@ type UpdateProduct struct {
 	Description   *string   `json:"description"`
 	Price         *float64  `json:"price"`
 	Category      *string   `json:"category"`
+	SubCategory   *string   `json:"sub_category,omitempty"` // Optional, for convenience
 	ImageURL      *[]string `json:"image_url"`
 	Size          *[]string `json:"size"`
 	Color         *[]string `json:"color"`
@@ -36,13 +38,14 @@ type UpdateProduct struct {
 }
 
 type ProductFilter struct {
-	Pagination *pkg.Pagination
-	Search     *string
-	PriceFrom  *float64
-	PriceTo    *float64
-	Category   *[]string
-	Size       *[]string
-	Color      *[]string
+	Pagination  *pkg.Pagination
+	Search      *string
+	PriceFrom   *float64
+	PriceTo     *float64
+	Category    *[]string
+	SubCategory *[]string
+	Size        *[]string
+	Color       *[]string
 }
 
 type ProductRepository interface {

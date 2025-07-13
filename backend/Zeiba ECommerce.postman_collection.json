@@ -93,6 +93,16 @@
 				{
 					"name": "createUser",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU2OTc3YWVhLTVmY2YtMTFmMC05NWZjLWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMTI6NTg6MTguMDA0MTQ0KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMjI6NTg6MTguMDA0MTQ0KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDM2Njk4LCJpYXQiOjE3NTI0MDA2OTh9.EK1QJv4xrkSmTMk0IShI8_OsbueNx_92FQg9mTv6guc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -105,14 +115,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://zeiba-glam-production.up.railway.app/api/v1/users",
-							"protocol": "https",
+							"raw": "localhost:3030/api/v1/users",
 							"host": [
-								"zeiba-glam-production",
-								"up",
-								"railway",
-								"app"
+								"localhost"
 							],
+							"port": "3030",
 							"path": [
 								"api",
 								"v1",
@@ -146,6 +153,16 @@
 				{
 					"name": "listUsers",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxYTVkNDk1LTNlNTgtMTFmMC1iYThlLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDUtMzFUMjI6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMDFUMDg6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzQ4NzU3MTY0LCJpYXQiOjE3NDg3MjExNjR9.vSnOblhf4b4YNG36LtGMp2WQouwCCWJpCAma-mRkhkY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -185,6 +202,16 @@
 				{
 					"name": "updateUsers",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxYTVkNDk1LTNlNTgtMTFmMC1iYThlLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDUtMzFUMjI6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMDFUMDg6NTI6NDQuMzgzNTUyNDI2KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzQ4NzU3MTY0LCJpYXQiOjE3NDg3MjExNjR9.vSnOblhf4b4YNG36LtGMp2WQouwCCWJpCAma-mRkhkY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
@@ -220,11 +247,21 @@
 				{
 					"name": "createProduct",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU2OTc3YWVhLTVmY2YtMTFmMC05NWZjLWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMTI6NTg6MTguMDA0MTQ0KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMjI6NTg6MTguMDA0MTQ0KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDM2Njk4LCJpYXQiOjE3NTI0MDA2OTh9.EK1QJv4xrkSmTMk0IShI8_OsbueNx_92FQg9mTv6guc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Crochet Tote Bag\",\n  \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n  \"price\": 29.50,\n  \"category\": 3,\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\"],\n  \"color\": [\"green\", \"cream\"],\n  \"stock_quantity\": 15\n}\n",
+							"raw": "{\n  \"name\": \"Crochet Tote Bag\",\n  \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n  \"price\": 29.50,\n  \"category\": 3,\n  \"sub_category\": 8,\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\"],\n  \"color\": [\"green\", \"cream\"],\n  \"stock_quantity\": 15\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -249,6 +286,16 @@
 				{
 					"name": "getProduct",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MDYyNGE2LTRmOGMtMTFmMC04MGY0LWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDYtMjJUMjA6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMjNUMDY6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUwNjQ4Mzg1LCJpYXQiOjE3NTA2MTIzODV9.x_1ae2D1X8pmwdE7jrYsbgMOjHqPqU_7zPF_LovBpqw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -285,7 +332,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/products?page=1&limit=30&category=shoes&category=shirts&category=bags",
+							"raw": "localhost:3030/api/v1/products",
 							"host": [
 								"localhost"
 							],
@@ -294,28 +341,6 @@
 								"api",
 								"v1",
 								"products"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "30"
-								},
-								{
-									"key": "category",
-									"value": "shoes"
-								},
-								{
-									"key": "category",
-									"value": "shirts"
-								},
-								{
-									"key": "category",
-									"value": "bags"
-								}
 							]
 						}
 					},
@@ -324,11 +349,21 @@
 				{
 					"name": "updateProduct",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4YTU2MmNlLTVmZDItMTFmMC1hNzNlLWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMTM6MTg6NTYuMjUzODE4KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMjM6MTg6NTYuMjUzODE4KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDM3OTM2LCJpYXQiOjE3NTI0MDE5MzZ9.IIC-4sh3akv06vINCLr4uKzHqjlTqTou6fgfDOX_jy0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n//   \"name\": \"Handmade Crochet Socked\",\n//   \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n//   \"price\": 34.99,\n//   \"category\": 2,\n  \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n  \"size\": [\"md\",\"xl\"],\n  \"color\": [\"green\"],\n  \"stock_quantity\": 30\n}\n",
+							"raw": "{\n//   \"name\": \"Handmade Crochet Socked\",\n//   \"description\": \"Stylish and eco-friendly handmade tote bag perfect for everyday use.\",\n//   \"price\": 34.99,\n//   \"category\": 1,\n// \"sub_category\": 3,\n//   \"image_url\": [\"https://example.com/images/tote1.jpg\"],\n//   \"size\": [\"md\",\"xl\"],\n//   \"color\": [\"green\"],\n  \"stock_quantity\": 300\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -336,7 +371,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/products/12",
+							"raw": "localhost:3030/api/v1/products/2",
 							"host": [
 								"localhost"
 							],
@@ -345,7 +380,7 @@
 								"api",
 								"v1",
 								"products",
-								"12"
+								"2"
 							]
 						}
 					},
@@ -470,11 +505,21 @@
 				{
 					"name": "createCategory",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiOTI1NjcwLTVmYjYtMTFmMC05Nzk5LWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMDk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMTk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDI1NjQ2LCJpYXQiOjE3NTIzODk2NDZ9.V4J1RWr8zBRdQ0pf6laeriJyr8wWSLUql_V2wpbrLek",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"shirts\",\n    \"description\": \"These are just shirts\"\n}",
+							"raw": "{\n    \"name\": \"shoes\",\n    \"description\": \"These are just shoes\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -499,6 +544,16 @@
 				{
 					"name": "getCategory",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MDYyNGE2LTRmOGMtMTFmMC04MGY0LWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDYtMjJUMjA6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMjNUMDY6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUwNjQ4Mzg1LCJpYXQiOjE3NTA2MTIzODV9.x_1ae2D1X8pmwdE7jrYsbgMOjHqPqU_7zPF_LovBpqw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -520,6 +575,16 @@
 				{
 					"name": "listCategories",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MDYyNGE2LTRmOGMtMTFmMC04MGY0LWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDYtMjJUMjA6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMjNUMDY6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUwNjQ4Mzg1LCJpYXQiOjE3NTA2MTIzODV9.x_1ae2D1X8pmwdE7jrYsbgMOjHqPqU_7zPF_LovBpqw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -540,6 +605,16 @@
 				{
 					"name": "updateCategory",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MDYyNGE2LTRmOGMtMTFmMC04MGY0LWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDYtMjJUMjA6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMjNUMDY6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUwNjQ4Mzg1LCJpYXQiOjE3NTA2MTIzODV9.x_1ae2D1X8pmwdE7jrYsbgMOjHqPqU_7zPF_LovBpqw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
@@ -575,6 +650,16 @@
 				{
 					"name": "getDashboardStats",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MDYyNGE2LTRmOGMtMTFmMC04MGY0LWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDYtMjJUMjA6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDYtMjNUMDY6MTM6MDUuMDc2OTU2NTAxKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUwNjQ4Mzg1LCJpYXQiOjE3NTA2MTIzODV9.x_1ae2D1X8pmwdE7jrYsbgMOjHqPqU_7zPF_LovBpqw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -589,6 +674,130 @@
 								"helpers",
 								"dashboard-stats"
 							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SubCategories",
+			"item": [
+				{
+					"name": "createSubCategory",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiOTI1NjcwLTVmYjYtMTFmMC05Nzk5LWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMDk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMTk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDI1NjQ2LCJpYXQiOjE3NTIzODk2NDZ9.V4J1RWr8zBRdQ0pf6laeriJyr8wWSLUql_V2wpbrLek",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"shome\",\n    \"description\": \"some nasty ass desc\",\n    \"category_id\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/sub-categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"sub-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSubCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/sub-categories/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"sub-categories",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listSubCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/sub-categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"sub-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listSubCategoriesByCategoriID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/sub-categories/category/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"sub-categories",
+								"category",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateSubCategory",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						}
 					},
 					"response": []

@@ -80,7 +80,3 @@ CREATE INDEX ON "orders" ("status");
 CREATE INDEX ON "order_items" ("order_id");
 
 CREATE INDEX ON "payments" ("order_id");
-
--- COMMENT ON COLUMN "orders"."status" IS 'pending, shipped, delivered';
-
--- COMMENT ON COLUMN "payments"."payment_method" IS 'mpesa, card';

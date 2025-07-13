@@ -34,6 +34,7 @@ func (r *ProductRepo) CreateProduct(
 		Description:   product.Description,
 		Price:         pkg.Float64ToPgTypeNumeric(product.Price),
 		Category:      product.Category,
+		SubCategory:   product.SubCategory,
 		ImageUrl:      product.ImageURL,
 		Size:          product.Size,
 		Color:         product.Color,
@@ -114,6 +115,11 @@ func (r *ProductRepo) ListProducts(
 		paramListProductCount.Category = *filter.Category
 	}
 
+	if filter.SubCategory != nil {
+		paramListProduct.SubCategory = *filter.SubCategory
+		paramListProductCount.SubCategory = *filter.SubCategory
+	}
+
 	if filter.Size != nil {
 		paramListProduct.Size = *filter.Size
 		paramListProductCount.Size = *filter.Size
@@ -184,6 +190,13 @@ func (r *ProductRepo) UpdateProduct(
 		}
 	}
 
+	if product.SubCategory != nil {
+		params.SubCategory = pgtype.Text{
+			String: *product.SubCategory,
+			Valid:  true,
+		}
+	}
+
 	if product.ImageURL != nil {
 		params.ImageUrl = *product.ImageURL
 	}
@@ -230,6 +243,7 @@ func marshalProduct(product generated.Product) *repository.Product {
 		Description:   product.Description,
 		Price:         pkg.PgTypeNumericToFloat64(product.Price),
 		Category:      product.Category,
+		SubCategory:   product.SubCategory,
 		ImageURL:      product.ImageUrl,
 		Size:          product.Size,
 		Color:         product.Color,

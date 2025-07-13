@@ -1,6 +1,6 @@
 -- name: CreateProduct :one
-INSERT INTO products (name, description, price, category, image_url, size, color, stock_quantity, updated_by)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO products (name, description, price, category, image_url, size, color, stock_quantity, updated_by, sub_category)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING *;
 
 -- name: GetProductByID :one
@@ -10,6 +10,11 @@ SELECT * FROM products WHERE id = $1;
 UPDATE products
 SET category = sqlc.arg('new_category')
 WHERE category = sqlc.arg('old_category');
+
+-- name: UpdateProductSubCategory :exec
+UPDATE products
+SET sub_category = sqlc.arg('new_sub_category')
+WHERE sub_category = sqlc.arg('old_sub_category');
 
 -- name: ListProducts :many
 SELECT * FROM products
@@ -27,6 +32,9 @@ WHERE
     )
     AND (
         sqlc.narg('category')::text[] IS NULL OR category = ANY(sqlc.narg('category')::text[])
+    )
+    AND (
+        sqlc.narg('sub_category')::text[] IS NULL OR sub_category = ANY(sqlc.narg('sub_category')::text[])
     )
     AND (
         sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')
@@ -56,6 +64,9 @@ WHERE
         sqlc.narg('category')::text[] IS NULL OR category = ANY(sqlc.narg('category')::text[])
     )
     AND (
+        sqlc.narg('sub_category')::text[] IS NULL OR sub_category = ANY(sqlc.narg('sub_category')::text[])
+    )
+    AND (
         sqlc.narg('size')::text[] IS NULL OR size && sqlc.narg('size')
     )
     AND (
@@ -69,6 +80,7 @@ SET updated_by = sqlc.arg('updated_by'),
     description = coalesce(sqlc.narg('description'), description),
     price = coalesce(sqlc.narg('price'), price),
     category = coalesce(sqlc.narg('category'), category),
+    sub_category = coalesce(sqlc.narg('sub_category'), sub_category),
     image_url = coalesce(sqlc.narg('image_url'), image_url),
     size = coalesce(sqlc.narg('size'), size),
     color = coalesce(sqlc.narg('color'), color),
