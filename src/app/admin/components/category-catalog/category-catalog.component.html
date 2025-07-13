@@ -7,10 +7,9 @@
 
   <p-table
     [value]="categories"
-    sortField="price"
-    [paginator]="categories.length > 10"
+    [paginator]="categories.length > 20"
     [loading]="loading"
-    [globalFilterFields]="['name', 'category']"
+    [globalFilterFields]="['name']"
     (onPage)="onPageChange($event)"
     #dt
   >
@@ -31,8 +30,8 @@
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-        <th pSortableColumn="stock_quantity">
-          Stock <p-sortIcon field="stock_quantity"></p-sortIcon>
+        <th pSortableColumn="description">
+          Description <p-sortIcon field="description"></p-sortIcon>
         </th>
         <th>Actions</th>
       </tr>
@@ -40,23 +39,9 @@
 
     <ng-template pTemplate="body" let-category>
       <tr>
-        <td>
-          <img
-            [src]="category.image_url"
-            [alt]="category.name"
-            class="w-12 h-12 object-cover rounded"
-          />
-        </td>
         <td>{{ category.name }}</td>
-        <td>{{ category.price }}</td>
-        <td>{{ category.category }}</td>
-        <td>
-          <p-tag
-            [value]="category.stock_quantity?.toString() || '0'"
-            [severity]="getStockSeverity(category.stock_quantity || 0)"
-          >
-          </p-tag>
-        </td>
+        <td>{{ category.description }}</td>
+
         <td>
           <div class="flex flex-col lg:flex-row">
             <p-button
@@ -96,6 +81,7 @@
     [(visible)]="showDialog"
     [category]="selectedCategory"
     (save)="onProductSave($event)"
+    (onHide)="showDialog = false"
   />
 
   <p-confirmDialog></p-confirmDialog>

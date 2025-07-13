@@ -39,3 +39,10 @@ export interface PaginationParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
+
+export interface ProductCategory {
+  id?: number;
+  name: string;
+  description?: string;
+
+}

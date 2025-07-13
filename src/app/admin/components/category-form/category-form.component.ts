@@ -1,29 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { Category } from '../../../core/services/category.service';
 import { DialogModule } from 'primeng/dialog';
+import { ProductCategory } from '../../../core/interfaces/interfaces';
+import { CategoryService } from '../../../core/services/category.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-category-form',
-  imports: [ReactiveFormsModule, DialogModule, ButtonModule, CommonModule],
+  imports: [ReactiveFormsModule, ToastModule, DialogModule, ButtonModule, CommonModule],
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.css',
+  providers: [MessageService],
 })
 export class CategoryFormComponent {
   categoryForm!: FormGroup;
   saving = false;
+  showDialog = false;
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
-  @Input() category: string | null = null;
-  @Output() save = new EventEmitter<Category>();
+  @Input() category: ProductCategory | null = null;
+  @Output() save = new EventEmitter<ProductCategory>();
+  private categoryService = inject(CategoryService);
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private messageService: MessageService
+  ) {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
+      description: ['', Validators.required],
     });
   }
 
@@ -35,8 +45,27 @@ export class CategoryFormComponent {
     if (this.categoryForm.valid) {
       const newCategory = this.categoryForm.value;
       console.log('Category submitted:', newCategory);
-      // Here you'd send `newCategory` to your backend
-      // e.g., this.categoryService.addCategory(newCategory).subscribe(...)
+      this.categoryService.createCategory(newCategory).subscribe({
+        next: () => {
+          this.saving = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Category added successfully',
+          });
+          this.visible = false;
+          this.visibleChange.emit(false);
+          this.save.emit(newCategory);
+          this.categoryForm.reset();
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add category',
+          });
+        },
+      });
     }
   }
 
