@@ -1,5 +1,5 @@
 DATABASE_URL=postgres://backend:secret@localhost:5432/zeiba?sslmode=disable
-MIGRATIONS_PATH=file:///Users/devops/cliff-projects/zeiba-glam/backend/internal/postgres/migrations
+MIGRATIONS_PATH=file:///home/emilio-cliff/zeiba-glam/backend/internal/postgres/migrations
 
 test:
 	go test -v ./...

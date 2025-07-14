@@ -23,5 +23,5 @@ type CategoryRepository interface {
 	GetCategory(ctx context.Context, id uint32) (*Category, error)
 	ListCategories(ctx context.Context) ([]*Category, error)
 	UpdateCategory(ctx context.Context, category *UpdateCategory) (*Category, error)
-	DeleteCategory(ctx context.Context, id uint32) error
+	DeleteCategory(ctx context.Context, id uint32) (error, interface{})
 }

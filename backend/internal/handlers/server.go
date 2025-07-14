@@ -75,6 +75,7 @@ func (s *Server) setUpRoutes() {
 	v1.GET("/categories/:id", s.getCategoryHandler)
 	v1.GET("/categories", s.listCategoriesHandler)
 	authRoute.PATCH("/categories/:id", s.updateCategoryHandler)
+	authRoute.DELETE("/categories/:id", s.deleteCategoryHandler)
 
 	// sub-categories route
 	authRoute.POST("/sub-categories", s.createSubCategoryHandler)
@@ -82,6 +83,7 @@ func (s *Server) setUpRoutes() {
 	v1.GET("/sub-categories", s.listSubcategoriesHandler)
 	v1.GET("/sub-categories/category/:category_id", s.listSubcategoriesByCategoryHandler)
 	authRoute.PATCH("/sub-categories/:id", s.updateSubCategoryHandler)
+	authRoute.DELETE("/sub-categories/:id", s.deleteSubCategoryHandler)
 
 	// orders routes
 	v1.POST("/orders", s.createOrderHandler)

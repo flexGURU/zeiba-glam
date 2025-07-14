@@ -128,29 +128,6 @@ func (s *CategoryRepo) UpdateCategory(
 		return nil
 	})
 
-	// if category.Name != nil {
-	// 	if err := s.queries.UpdateProductCategory(ctx, generated.UpdateProductCategoryParams{
-	// 		NewCategory: *category.Name,
-	// 		OldCategory: oldName,
-	// 	}); err != nil {
-	// 		return nil, pkg.Errorf(
-	// 			pkg.INTERNAL_ERROR,
-	// 			"error updating product category: %s",
-	// 			err.Error(),
-	// 		)
-	// 	}
-
-	// 	params.Name = pgtype.Text{String: *category.Name, Valid: true}
-	// }
-	// if category.Description != nil {
-	// 	params.Description = pgtype.Text{String: *category.Description, Valid: true}
-	// }
-
-	// categoryUpdated, err := s.queries.UpdateCategory(ctx, params)
-	// if err != nil {
-	// 	return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error updating category: %s", err.Error())
-	// }
-
 	return &repository.Category{
 		ID:          uint32(categoryUpdated.ID),
 		Name:        categoryUpdated.Name,
@@ -159,13 +136,81 @@ func (s *CategoryRepo) UpdateCategory(
 	}, err
 }
 
-func (s *CategoryRepo) DeleteCategory(ctx context.Context, id uint32) error {
-	if err := s.queries.DeleteCategory(ctx, int64(id)); err != nil {
+func (s *CategoryRepo) DeleteCategory(ctx context.Context, id uint32) (error, interface{}) {
+	response := make(map[string]interface{})
+	hasDependencies := false
+
+	category, err := s.queries.GetCategory(ctx, int64(id))
+	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "category not found")
+			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "category not found"), nil
 		}
-		return pkg.Errorf(pkg.INTERNAL_ERROR, "error deleting category: %s", err.Error())
+		return pkg.Errorf(pkg.INTERNAL_ERROR, "error getting category by id: %s", err.Error()), nil
 	}
 
-	return nil
+	// check if category has products or subcategories related to it
+	products, err := s.queries.GetProductsByCategory(ctx, category.Name)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return pkg.Errorf(
+				pkg.INTERNAL_ERROR,
+				"error getting products by category: %s",
+				err.Error(),
+			), nil
+		}
+	}
+
+	if len(products) > 0 {
+		hasDependencies = true
+		p := make([]repository.Product, len(products))
+		for i, product := range products {
+			p[i] = repository.Product{
+				ID:            uint32(product.ID),
+				Name:          product.Name,
+				StockQuantity: product.StockQuantity,
+				Category:      product.Category,
+				SubCategory:   product.SubCategory,
+				ImageURL:      product.ImageUrl,
+				Size:          product.Size,
+				Color:         product.Color,
+			}
+		}
+
+		response["products"] = p
+	}
+
+	subCategories, err := s.queries.ListSubCategoriesByCategory(ctx, int64(id))
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return pkg.Errorf(
+				pkg.INTERNAL_ERROR,
+				"error getting subcategories by category id: %s",
+				err.Error(),
+			), nil
+		}
+	}
+
+	if len(subCategories) > 0 {
+		hasDependencies = true
+		s := make([]repository.SubCategory, len(subCategories))
+		for i, subCategory := range subCategories {
+			s[i] = repository.SubCategory{
+				ID:          uint32(subCategory.ID),
+				Name:        subCategory.Name,
+				Description: subCategory.Description,
+			}
+		}
+
+		response["subCategories"] = s
+	}
+
+	if hasDependencies {
+		return nil, response
+	}
+
+	if err := s.queries.DeleteCategory(ctx, int64(id)); err != nil {
+		return pkg.Errorf(pkg.INTERNAL_ERROR, "error deleting category: %s", err.Error()), nil
+	}
+
+	return nil, nil
 }

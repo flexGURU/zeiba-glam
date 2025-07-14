@@ -641,6 +641,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -691,7 +712,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiOTI1NjcwLTVmYjYtMTFmMC05Nzk5LWJhMmI1ODA3MGUzNiIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTNUMDk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTNUMTk6NTQ6MDYuODE4MjYzKzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNDI1NjQ2LCJpYXQiOjE3NTIzODk2NDZ9.V4J1RWr8zBRdQ0pf6laeriJyr8wWSLUql_V2wpbrLek",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRiZTgzNGU0LTYwNjktMTFmMC04NzYzLWQ0YzllZmU5MDE4YSIsInVzZXJfaWQiOjEsInVzZXJfZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaXNfYWRtaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjUtMDctMTRUMDc6MTY6MjAuOTgyNzAyODY1KzAzOjAwIiwiZXhwaXJlc19hdCI6IjIwMjUtMDctMTRUMTc6MTY6MjAuOTgyNzAyODY1KzAzOjAwIiwiaXNzIjoiWkVJQkFfQVBQIiwiZXhwIjoxNzUyNTAyNTgwLCJpYXQiOjE3NTI0NjY1ODB9.aB4AUBDAmZcRsdBDU-6VvzBGFyQ_iK9ht6Uv_bOOzwo",
 									"type": "string"
 								}
 							]
@@ -700,7 +721,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"shome\",\n    \"description\": \"some nasty ass desc\",\n    \"category_id\": 3\n}",
+							"raw": "{\n    \"name\": \"white shirst\",\n    \"description\": \"some nasty ass desc\",\n    \"category_id\": 3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -798,6 +819,27 @@
 									"language": "json"
 								}
 							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteSubCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/sub-categories/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"sub-categories",
+								"1"
+							]
 						}
 					},
 					"response": []

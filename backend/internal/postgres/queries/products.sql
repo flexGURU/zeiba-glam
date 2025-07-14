@@ -6,6 +6,12 @@ RETURNING *;
 -- name: GetProductByID :one
 SELECT * FROM products WHERE id = $1;
 
+-- name: GetProductsByCategory :many
+SELECT * FROM products WHERE category = $1;
+
+-- name: GetProductsBySubCategory :many
+SELECT * FROM products WHERE sub_category = $1;
+
 -- name: UpdateProductCategory :exec
 UPDATE products
 SET category = sqlc.arg('new_category')

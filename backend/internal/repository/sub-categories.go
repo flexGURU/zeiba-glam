@@ -24,9 +24,12 @@ type UpdateSubCategory struct {
 type SubCategoryRepository interface {
 	CreateSubCategory(ctx context.Context, subCategory *SubCategory) (*SubCategory, error)
 	GetSubCategory(ctx context.Context, id uint32) (*SubCategory, error)
-	GetSubCategoryByCategoryIDAndID(ctx context.Context, categoryID, id uint32) (*SubCategory, error)
+	GetSubCategoryByCategoryIDAndID(
+		ctx context.Context,
+		categoryID, id uint32,
+	) (*SubCategory, error)
 	ListSubCategoriesByCategoryID(ctx context.Context, categoryID uint32) ([]*SubCategory, error)
 	ListSubCategories(ctx context.Context) ([]*SubCategory, error)
 	UpdateSubCategory(ctx context.Context, subCategory *UpdateSubCategory) (*SubCategory, error)
-	DeleteSubCategory(ctx context.Context, id uint32) error
+	DeleteSubCategory(ctx context.Context, id uint32) (error, interface{})
 }

@@ -25,7 +25,10 @@ func NewSubCategoryRepo(db *Store) *SubCategoryRepo {
 	}
 }
 
-func (r *SubCategoryRepo) CreateSubCategory(ctx context.Context, subCategory *repository.SubCategory) (*repository.SubCategory, error) {
+func (r *SubCategoryRepo) CreateSubCategory(
+	ctx context.Context,
+	subCategory *repository.SubCategory,
+) (*repository.SubCategory, error) {
 	subCategoryCreated, err := r.queries.CreateSubCategory(ctx, generated.CreateSubCategoryParams{
 		CategoryID:  int64(subCategory.CategoryID),
 		Name:        subCategory.Name,
@@ -43,7 +46,10 @@ func (r *SubCategoryRepo) CreateSubCategory(ctx context.Context, subCategory *re
 	return subCategory, nil
 }
 
-func (r *SubCategoryRepo) GetSubCategory(ctx context.Context, id uint32) (*repository.SubCategory, error) {
+func (r *SubCategoryRepo) GetSubCategory(
+	ctx context.Context,
+	id uint32,
+) (*repository.SubCategory, error) {
 	subcategory, err := r.queries.GetSubCategoryByID(ctx, int64(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -63,16 +69,31 @@ func (r *SubCategoryRepo) GetSubCategory(ctx context.Context, id uint32) (*repos
 	}, nil
 }
 
-func (r *SubCategoryRepo) GetSubCategoryByCategoryIDAndID(ctx context.Context, categoryID, id uint32) (*repository.SubCategory, error) {
-	subCategory, err := r.queries.GetSubCategoryByCategoryIDAndID(ctx, generated.GetSubCategoryByCategoryIDAndIDParams{
-		CategoryID: int64(categoryID),
-		ID:         int64(id),
-	})
+func (r *SubCategoryRepo) GetSubCategoryByCategoryIDAndID(
+	ctx context.Context,
+	categoryID, id uint32,
+) (*repository.SubCategory, error) {
+	subCategory, err := r.queries.GetSubCategoryByCategoryIDAndID(
+		ctx,
+		generated.GetSubCategoryByCategoryIDAndIDParams{
+			CategoryID: int64(categoryID),
+			ID:         int64(id),
+		},
+	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "sub-category not found for category ID %d and subcategoryID %d", categoryID, id)
+			return nil, pkg.Errorf(
+				pkg.NOT_FOUND_ERROR,
+				"sub-category not found for category ID %d and subcategoryID %d",
+				categoryID,
+				id,
+			)
 		}
-		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting sub-category by category ID and ID: %s", err.Error())
+		return nil, pkg.Errorf(
+			pkg.INTERNAL_ERROR,
+			"error getting sub-category by category ID and ID: %s",
+			err.Error(),
+		)
 	}
 
 	return &repository.SubCategory{
@@ -84,10 +105,17 @@ func (r *SubCategoryRepo) GetSubCategoryByCategoryIDAndID(ctx context.Context, c
 	}, nil
 }
 
-func (r *SubCategoryRepo) ListSubCategoriesByCategoryID(ctx context.Context, categoryID uint32) ([]*repository.SubCategory, error) {
+func (r *SubCategoryRepo) ListSubCategoriesByCategoryID(
+	ctx context.Context,
+	categoryID uint32,
+) ([]*repository.SubCategory, error) {
 	result, err := r.queries.ListSubCategoriesByCategory(ctx, int64(categoryID))
 	if err != nil {
-		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error listing sub-categories by category ID: %s", err.Error())
+		return nil, pkg.Errorf(
+			pkg.INTERNAL_ERROR,
+			"error listing sub-categories by category ID: %s",
+			err.Error(),
+		)
 	}
 	subCategories := make([]*repository.SubCategory, 0, len(result))
 	for _, subCategory := range result {
@@ -102,7 +130,9 @@ func (r *SubCategoryRepo) ListSubCategoriesByCategoryID(ctx context.Context, cat
 	return subCategories, nil
 }
 
-func (r *SubCategoryRepo) ListSubCategories(ctx context.Context) ([]*repository.SubCategory, error) {
+func (r *SubCategoryRepo) ListSubCategories(
+	ctx context.Context,
+) ([]*repository.SubCategory, error) {
 	result, err := r.queries.ListSubCategories(ctx)
 	if err != nil {
 		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error listing sub-categories: %s", err.Error())
@@ -122,7 +152,10 @@ func (r *SubCategoryRepo) ListSubCategories(ctx context.Context) ([]*repository.
 	return subCategories, nil
 }
 
-func (r *SubCategoryRepo) UpdateSubCategory(ctx context.Context, subCategory *repository.UpdateSubCategory) (*repository.SubCategory, error) {
+func (r *SubCategoryRepo) UpdateSubCategory(
+	ctx context.Context,
+	subCategory *repository.UpdateSubCategory,
+) (*repository.SubCategory, error) {
 	var createdSubCategory generated.SubCategory
 	var err error
 
@@ -131,7 +164,11 @@ func (r *SubCategoryRepo) UpdateSubCategory(ctx context.Context, subCategory *re
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, pkg.Errorf(pkg.NOT_FOUND_ERROR, "sub-category not found")
 		}
-		return nil, pkg.Errorf(pkg.INTERNAL_ERROR, "error getting sub-category by id: %s", err.Error())
+		return nil, pkg.Errorf(
+			pkg.INTERNAL_ERROR,
+			"error getting sub-category by id: %s",
+			err.Error(),
+		)
 	}
 
 	err = r.db.ExecTx(ctx, func(q *generated.Queries) error {
@@ -144,7 +181,11 @@ func (r *SubCategoryRepo) UpdateSubCategory(ctx context.Context, subCategory *re
 				OldSubCategory: oldSubCategory.Name,
 				NewSubCategory: *subCategory.Name,
 			}); err != nil {
-				return pkg.Errorf(pkg.INTERNAL_ERROR, "error updating product sub-category: %s", err.Error())
+				return pkg.Errorf(
+					pkg.INTERNAL_ERROR,
+					"error updating product sub-category: %s",
+					err.Error(),
+				)
 			}
 
 			params.Name = pgtype.Text{String: *subCategory.Name, Valid: true}
@@ -170,12 +211,60 @@ func (r *SubCategoryRepo) UpdateSubCategory(ctx context.Context, subCategory *re
 	}, err
 }
 
-func (r *SubCategoryRepo) DeleteSubCategory(ctx context.Context, id uint32) error {
-	if err := r.queries.DeleteSubCategory(ctx, int64(id)); err != nil {
+func (r *SubCategoryRepo) DeleteSubCategory(ctx context.Context, id uint32) (error, interface{}) {
+	response := make(map[string]interface{})
+	hasDependencies := false
+
+	subCategory, err := r.queries.GetSubCategoryByID(ctx, int64(id))
+	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "sub-category not found")
+			return pkg.Errorf(pkg.NOT_FOUND_ERROR, "sub-category not found"), nil
 		}
-		return pkg.Errorf(pkg.INTERNAL_ERROR, "error deleting sub-category: %s", err.Error())
+		return pkg.Errorf(
+			pkg.INTERNAL_ERROR,
+			"error getting sub-category by id: %s",
+			err.Error(),
+		), nil
 	}
-	return nil
+
+	// check if sub-category has products related to it
+	products, err := r.queries.GetProductsBySubCategory(ctx, subCategory.Name)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return pkg.Errorf(
+				pkg.INTERNAL_ERROR,
+				"error getting products by sub-category: %s",
+				err.Error(),
+			), nil
+		}
+	}
+
+	if len(products) > 0 {
+		hasDependencies = true
+		p := make([]repository.Product, len(products))
+		for i, product := range products {
+			p[i] = repository.Product{
+				ID:            uint32(product.ID),
+				Name:          product.Name,
+				StockQuantity: product.StockQuantity,
+				Category:      product.Category,
+				SubCategory:   product.SubCategory,
+				ImageURL:      product.ImageUrl,
+				Size:          product.Size,
+				Color:         product.Color,
+			}
+		}
+
+		response["products"] = p
+	}
+
+	if hasDependencies {
+		return nil, response
+	}
+
+	if err := r.queries.DeleteSubCategory(ctx, int64(id)); err != nil {
+		return pkg.Errorf(pkg.INTERNAL_ERROR, "error deleting sub-category: %s", err.Error()), nil
+	}
+
+	return nil, nil
 }

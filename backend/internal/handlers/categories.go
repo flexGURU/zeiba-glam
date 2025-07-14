@@ -140,3 +140,29 @@ func (s *Server) updateCategoryHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": category})
 }
+
+func (s *Server) deleteCategoryHandler(c *gin.Context) {
+	categoryId, err := pkg.StringToUint32(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	err, response := s.repo.CategoryRepo.DeleteCategory(c, categoryId)
+	if err != nil {
+		c.JSON(pkg.ErrorToStatusCode(err), errorResponse(err))
+		return
+	}
+
+	if response != nil {
+		c.JSON(
+			http.StatusForbidden,
+			gin.H{
+				"data":    response,
+				"message": "Category has products or subcategories related to it",
+			},
+		)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
+	}
+}
