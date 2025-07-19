@@ -48,7 +48,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     this.loginForm = this.fb.group({
       email: ['test@gmail.com', [Validators.required, Validators.email]],
@@ -63,7 +63,6 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.getRawValue();
-    console.log(email, password);
 
     this.authService.login(email, password).subscribe({
       next: (response) => {

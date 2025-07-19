@@ -18,6 +18,7 @@ export class MenuComponent {
         icon: 'pi pi-folder',
         routerLink: 'category',
       },
+
       {
         label: 'Dashboard',
         icon: 'pi pi-home',

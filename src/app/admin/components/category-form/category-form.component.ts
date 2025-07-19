@@ -41,32 +41,56 @@ export class CategoryFormComponent {
     return this.categoryForm.controls;
   }
 
+  ngOnChanges() {
+    if (this.category) {
+      this.categoryForm.patchValue({
+        name: this.category.name,
+        description: this.category.description,
+      });
+    } else {
+      this.categoryForm.reset();
+    }
+  }
   onSubmit() {
-    if (this.categoryForm.valid) {
-      const newCategory = this.categoryForm.value;
-      console.log('Category submitted:', newCategory);
-      this.categoryService.createCategory(newCategory).subscribe({
+    if (this.categoryForm.invalid) return;
+
+    this.saving = true;
+    const formData = this.categoryForm.value;
+
+    if (this.category && this.category.id) {
+      const updatedCategory: ProductCategory = {
+        ...this.category,
+        ...formData,
+      };
+
+      this.categoryService.updateCategory(this.category.id, updatedCategory).subscribe({
         next: () => {
-          this.saving = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Category added successfully',
-          });
-          this.visible = false;
-          this.visibleChange.emit(false);
-          this.save.emit(newCategory);
-          this.categoryForm.reset();
+          this.afterSave('Category updated successfully', updatedCategory);
         },
-        error: (err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to add category',
-          });
+        error: () => this.handleError('Failed to update category'),
+      });
+    } else {
+      this.categoryService.createCategory(formData).subscribe({
+        next: (createdCategory) => {
+          this.afterSave('Category added successfully', createdCategory);
         },
+        error: () => this.handleError('Failed to add category'),
       });
     }
+  }
+
+  private afterSave(message: string, category: ProductCategory) {
+    this.saving = false;
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.visible = false;
+    this.visibleChange.emit(false);
+    this.save.emit(category);
+    this.categoryForm.reset();
+  }
+
+  private handleError(detail: string) {
+    this.saving = false;
+    this.messageService.add({ severity: 'error', summary: 'Error', detail });
   }
 
   onHide() {

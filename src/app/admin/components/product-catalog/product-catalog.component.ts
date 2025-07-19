@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { PaginationParams, Product, RawProductPayload } from '../../../core/interfaces/interfaces';
+import {
+  PaginationParams,
+  Product,
+  ProductCategory,
+  RawProductPayload,
+} from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -8,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputText } from 'primeng/inputtext';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-product-catalog',

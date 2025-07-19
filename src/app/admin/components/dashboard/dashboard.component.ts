@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ProductService } from '../../../core/services/product.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ProductCatalogComponent } from '../product-catalog/product-catalog.component';
@@ -21,20 +20,5 @@ export class DashboardComponent {
     outOfStock: 0,
   };
 
-  constructor(private productService: ProductService) {}
-
-  ngOnInit() {
-    this.loadStats();
-  }
-
-  loadStats() {
-    this.productService.getAllProducts().subscribe((products) => {
-      this.stats.totalProducts = products.length;
-      this.stats.inStock = products.filter((p) => (p.stock || 0) > 10).length;
-      this.stats.lowStock = products.filter(
-        (p) => (p.stock || 0) > 0 && (p.stock || 0) <= 10
-      ).length;
-      this.stats.outOfStock = products.filter((p) => (p.stock || 0) === 0).length;
-    });
-  }
+ 
 }

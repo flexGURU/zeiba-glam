@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   price: number;
   category: string;
+  sub_category: string;
   image: string[];
   description: string;
   colors: string[];
@@ -16,7 +17,8 @@ export interface RawProductPayload {
   name: string;
   description: string;
   price: number;
-  category: string[];
+  category: string;
+  sub_category: string;
   image_url: string[];
   size: string[];
   color: string[];
@@ -45,4 +47,20 @@ export interface ProductCategory {
   name: string;
   description?: string;
 
+}
+
+export interface ProductSubCategory {
+  id?: number;
+  name: string;
+  description?: string;
+  category_id: number;
+
+}
+
+
+export interface DashboardStats {
+  total_products: number;
+  in_stock: number;
+  low_stock: number;
+  out_of_stock: number;
 }

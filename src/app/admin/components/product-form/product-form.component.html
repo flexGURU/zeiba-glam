@@ -44,25 +44,41 @@
         <label for="category" class="block text-sm font-medium mb-2">Category *</label>
         <p-select
           [options]="categories"
+          optionLabel="name"
+          optionValue="id"
           formControlName="category"
           placeholder="Select a category"
+          (ngModelChange)="onCategoryModelChange($event)"
           class="w-full"
           [class.ng-invalid]="
             productForm.get('category')?.invalid && productForm.get('category')?.touched
           "
         ></p-select>
       </div>
-
       <div class="field">
-        <label for="stock" class="block text-sm font-medium mb-2">Stock Quantity</label>
-        <p-inputNumber
-          inputId="stock"
-          formControlName="stock"
+        <label for="Sub Category" class="block text-sm font-medium mb-2">Sub Category *</label>
+        <p-select
+          [options]="productSubCategories"
+          optionLabel="name"
+          optionValue="id"
+          formControlName="sub_category"
+          placeholder="Select a sub-category"
           class="w-full"
-          [min]="0"
-          placeholder="0"
-        ></p-inputNumber>
+          [class.ng-invalid]="
+            productForm.get('sub_category')?.invalid && productForm.get('sub_category')?.touched
+          "
+        ></p-select>
       </div>
+    </div>
+    <div class="field">
+      <label for="stock" class="block text-sm font-medium mb-2">Stock Quantity</label>
+      <p-inputNumber
+        inputId="stock"
+        formControlName="stock"
+        class="w-full"
+        [min]="0"
+        placeholder="0"
+      ></p-inputNumber>
     </div>
 
     <!-- Description -->

@@ -7,9 +7,15 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Product, RawProductPayload } from '../../../core/interfaces/interfaces';
+import {
+  Product,
+  ProductCategory,
+  ProductSubCategory,
+  RawProductPayload,
+} from '../../../core/interfaces/interfaces';
 import { ProductService } from '../../../core/services/product.service';
 import { FirebaseService } from '../../services/firebase.service';
+import { CategoryService } from '../../../core/services/category.service';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
@@ -21,6 +27,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
+import { log } from 'console';
+import { SubCategoryService } from '../../../core/services/sub-category.service';
 
 @Component({
   selector: 'app-product-form',
@@ -50,6 +58,7 @@ export class ProductFormComponent {
 
   // Add ViewChild to access the FileUpload component
   @ViewChild('fileUpload') fileUpload!: FileUpload;
+  categories: ProductCategory[] = [];
 
   colorOptions = [
     { label: 'Red', value: 'red' },
@@ -78,28 +87,26 @@ export class ProductFormComponent {
   commonSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
   productForm: FormGroup;
-  categories = [
-    { label: 'Electronics', value: 'electronics' },
-    { label: 'Clothing', value: 'clothing' },
-    { label: 'Home & Garden', value: 'home-garden' },
-    { label: 'Sports', value: 'sports' },
-    { label: 'Books', value: 'books' },
-  ];
 
   saving = false;
   selectedFiles = signal<File[]>([]);
   imagePreviews = signal<string[]>([]);
+  productSubCategories: ProductSubCategory[] = [];
+  selectedCategory: string = '';
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
     private firebaseService: FirebaseService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private categoryService: CategoryService,
+    private subCategoryService: SubCategoryService
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       category: ['', Validators.required],
+      sub_category: ['', Validators.required],
       description: ['', Validators.required],
       stock: [0, [Validators.min(0)]],
       material: [''],
@@ -109,15 +116,31 @@ export class ProductFormComponent {
     });
   }
 
+  ngOnInit() {
+    this.loadCategories();
+  }
+  onCategoryModelChange(event: any) {
+    this.subCategoryService.getSubCategoriesByCategoryId(event).subscribe((subCategories) => {
+      this.productSubCategories = subCategories;
+    });
+  }
+
   ngOnChanges() {
     if (this.product) {
       this.imagePreviews.set(this.product.image_url);
-      console.log(this.imagePreviews());
+
+      const categoryId =
+        this.categories.find((cat) => cat.name === this.product?.category)?.id ?? null;
+
+      const subCategoryId =
+        this.productSubCategories.find((sub) => sub.name === this.product?.sub_category)?.id ??
+        null;
 
       this.productForm.patchValue({
         name: this.product.name,
         price: this.product.price,
-        category: this.product.category,
+        category: categoryId,
+        sub_category: subCategoryId,
         description: this.product.description,
         stock: this.product.stock_quantity || 0,
         material: this.product.material || '',
@@ -127,6 +150,11 @@ export class ProductFormComponent {
     } else {
       this.resetForm();
     }
+  }
+  loadCategories() {
+    this.categoryService.getAllCategories().subscribe((resp) => {
+      this.categories = resp ?? [];
+    });
   }
   onImageSelect(event: any) {
     if (event.files && event.files.length) {
@@ -156,6 +184,7 @@ export class ProductFormComponent {
       name: this.productForm.value.name,
       price: this.productForm.value.price,
       category: this.productForm.value.category,
+      sub_category: this.productForm.value.sub_category,
       image: [],
       description: this.productForm.value.description,
       colors: this.productForm.value.colors,

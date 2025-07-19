@@ -73,12 +73,7 @@ export class ProductService {
   }
 
   getProductsByCategory(category: string): Observable<Product[]> {
-    return this.getAllProducts().pipe(
-      map((products) =>
-        products.filter((product) => product.category.toLowerCase() === category.toLowerCase())
-      ),
-      catchError(this.handleError)
-    );
+  return of([]); // Placeholder for actual implementation 
   }
 
   private handleError(error: any) {
@@ -95,7 +90,8 @@ export class ProductService {
       name: productData.name,
       description: productData.description,
       price: productData.price,
-      category: [productData.category],
+      category: productData.category,
+      sub_category: productData.sub_category,
       image_url: productData.image,
       size: productData.sizes,
       stock_quantity: productData.stock,
@@ -112,7 +108,8 @@ export class ProductService {
       name: productData.name,
       description: productData.description,
       price: productData.price,
-      category: [productData.category],
+      category: productData.category,
+      sub_category: productData.sub_category,
       image_url: productData.image,
       size: productData.sizes,
       stock_quantity: productData.stock,
