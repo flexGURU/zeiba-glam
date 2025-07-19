@@ -1,0 +1,78 @@
+<p-dialog
+  header="{{ subCategoryForm.value?.id ? 'Edit' : 'Add' }} Sub-Category"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onHide()"
+>
+  <form [formGroup]="subCategoryForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Category Name -->
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 mb-2"
+        >Sub-Category Name</label
+      >
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        type="text"
+        placeholder="Enter sub-category name"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        [class.border-red-500]="f['name'].touched && f['name'].invalid"
+      />
+      <small *ngIf="f['name'].touched && f['name'].invalid" class="text-red-500 text-xs mt-1 block">
+        Name is required
+      </small>
+    </div>
+
+    <!-- Category Description -->
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-2"
+        >Description</label
+      >
+      <textarea
+        pInputTextarea
+        id="description"
+        formControlName="description"
+        rows="3"
+        placeholder="Enter description (optional)"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      ></textarea>
+    </div>
+
+    <!-- <div *ngIf="!categoryIdPassed">
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-2"
+        >Category</label
+      >
+      <p-select
+          [options]="categories"
+          optionLabel="name"
+          optionValue="id"
+          formControlName="category_id"
+          placeholder="Select a category"
+          appendTo="body"
+          class="w-full"
+          [class.ng-invalid]="
+            subCategoryForm.get('category')?.invalid && subCategoryForm.get('category')?.touched
+          "
+        ></p-select>
+    </div> -->
+  </form>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-end">
+      <p-button label="Cancel" severity="secondary" (onClick)="onHide()"></p-button>
+      <p-button
+        label="Save Sub-category"
+        type="submit"
+        [loading]="saving"
+        [disabled]="f['name'].invalid || f['description'].invalid"
+        (onClick)="onSubmit()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+<p-toast></p-toast>
