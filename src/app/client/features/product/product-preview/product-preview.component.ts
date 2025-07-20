@@ -4,7 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Product } from '../../../../core/interfaces/interfaces';
+import { Product, RawProductPayload } from '../../../../core/interfaces/interfaces';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -15,7 +15,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ProductPreviewComponent {
   @Input() quickViewVisible: boolean = false;
-  @Input() selectedProduct: Product | null = null;
+  @Input() selectedProduct: RawProductPayload | null = null;
   @Output() quickViewVisibleChange = new EventEmitter<boolean>();
 
   selectedColor: string = '';

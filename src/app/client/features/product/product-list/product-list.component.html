@@ -4,7 +4,6 @@
     <h1 class="text-3xl md:text-4xl font-bold mb-2 capitalize">
       {{ categoryTitle }}
     </h1>
-    <p class="text-gray-600">{{ getDescription() }}</p>
   </div>
 
   <!-- Filters and Sort -->
@@ -81,10 +80,10 @@
           <h3 class="font-medium mb-3">Colors</h3>
           <div class="flex flex-wrap gap-2">
             <div
-              *ngFor="let color of availableColors"
+              *ngFor="let color of availableColor"
               (click)="toggleColorFilter(color)"
               [ngClass]="{
-                'border-2 border-purple-600': selectedColors().includes(color),
+                'border-2 border-purple-600': selectedColor().includes(color),
               }"
               class="w-6 h-6 cursor-pointer"
               [style]="{ 'background-color': color }"
@@ -124,7 +123,7 @@
           </button>
         </div>
         <div
-          *ngFor="let color of selectedColors()"
+          *ngFor="let color of selectedColor()"
           class="bg-gray-100 text-gray-800 text-sm px-2 py-1 flex items-center gap-1"
         >
           <span class="w-3 h-3 inline-block" [style]="{ 'background-color': color }"></span>
@@ -181,7 +180,7 @@
       <a [routerLink]="['/product']" class="block">
         <div class="aspect-[3/4] overflow-hidden relative">
           <img
-            [src]="product.image"
+            [src]="product.image_url"
             [alt]="product.name"
             class="w-full h-full object-cover group-hover:opacity-65 group-hover:scale-105 transition-transform duration-500"
           />
@@ -209,7 +208,7 @@
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="!loading && filteredProducts.length > 0" class="mt-8 flex justify-center">
+  <div *ngIf="!loading && filteredProducts.length > 12" class="mt-8 flex justify-center">
     <p-paginator
       [rows]="pageSize"
       [totalRecords]="totalFilteredProducts"

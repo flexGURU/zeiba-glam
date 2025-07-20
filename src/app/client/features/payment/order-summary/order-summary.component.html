@@ -32,17 +32,9 @@
   </div>
 
   <div class="space-y-3 border-t border-gray-200 pt-4">
-    <div class="flex justify-between text-gray-600">
-      <span>Subtotal:</span>
-      <span>KES {{ orderItem?.totalPrice.toFixed(2) }}</span>
-    </div>
-    <div class="flex justify-between text-gray-600">
-      <span>Shipping:</span>
-      <span>KES 200.00</span>
-    </div>
     <div class="flex justify-between font-bold text-xl text-gray-900 border-t border-gray-200 pt-3">
       <span>Total:</span>
-      <span class="text-purple-600">KES {{ (orderItem?.totalPrice + 200).toFixed(2) }}</span>
+      <span class="text-purple-600">KES {{ totalAmount.toFixed(2) }}</span>
     </div>
   </div>
 </div>

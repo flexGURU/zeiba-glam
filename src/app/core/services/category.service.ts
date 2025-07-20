@@ -43,6 +43,8 @@ export class CategoryService {
     );
   }
 
+  
+
   getCategoryById(id: number): Observable<ProductCategory> {
     return this.http.get<{ data: ProductCategory }>(`${this.apiURL}/${id}`).pipe(
       map((response) => {

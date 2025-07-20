@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem, SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
@@ -8,11 +8,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PaginatorModule } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { CartService } from '../../../../core/services/cart.service';
+import { CartService } from '../../../services/cart.service';
 import { ProductPreviewComponent } from '../product-preview/product-preview.component';
-import { Product } from '../../../../core/interfaces/interfaces';
+import { Product, RawProductPayload } from '../../../../core/interfaces/interfaces';
 import { ProductService } from '../../../../core/services/product.service';
 import { ButtonModule } from 'primeng/button';
+import { CategoryService } from '../../../../core/services/category.service';
 
 @Component({
   selector: 'app-product-list',
@@ -37,9 +38,9 @@ export class ProductListComponent {
   loading: boolean = true;
   category: string = '';
   categoryTitle: string = 'All Products';
-  products: Product[] = [];
+  products: RawProductPayload[] = [];
 
-  filteredProducts: Product[] = [];
+  filteredProducts: RawProductPayload[] = [];
   totalFilteredProducts: number = 0;
 
   // Pagination
@@ -52,7 +53,7 @@ export class ProductListComponent {
   // Filters
   showFilters: boolean = false;
   priceRange: number[] = [0, 1000];
-  availableColors: string[] = [
+  availableColor: string[] = [
     'black',
     'white',
     'red',
@@ -63,7 +64,7 @@ export class ProductListComponent {
     'beige',
     'brown',
   ];
-  selectedColors = signal<string[]>([]);
+  selectedColor = signal<string[]>([]);
   availableSizes: string[] = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
   selectedSizes = signal<string[]>([]);
 
@@ -73,69 +74,66 @@ export class ProductListComponent {
 
   // Quick View
   quickViewVisible: boolean = false;
-  selectedProduct: Product | null = null;
-  selectedColor: string = '';
+  selectedProduct: RawProductPayload | null = null;
   selectedSize: string = '';
   selectedQuantity: number = 1;
 
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService,
     private cartService: CartService
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const category = params.get('category');
-      this.category = category || '';
-      this.updateCategoryTitle();
-      this.loadProducts();
+    this.route.queryParams.subscribe((params) => {
+      if (params['category']) {
+        this.category = params['category'];
+
+        this.loadProductsByCategory(this.category);
+      } else {
+        this.loadProducts();
+      }
     });
-  }
-
-  updateCategoryTitle(): void {
-    if (!this.category) {
-      this.categoryTitle = 'All Products';
-    } else if (this.category === 'new-arrivals') {
-      this.categoryTitle = 'New Arrivals';
-    } else if (this.category === 'best-sellers') {
-      this.categoryTitle = 'Best Sellers';
-    } else {
-      this.categoryTitle = this.category.charAt(0).toUpperCase() + this.category.slice(1);
-    }
-  }
-
-  getDescription(): string {
-    if (this.category === 'new-arrivals') {
-      return 'Check out our latest additions to stay on trend with the newest styles.';
-    } else if (this.category === 'best-sellers') {
-      return 'Discover our most popular pieces loved by our customers.';
-    } else if (this.category === 'abayas') {
-      return 'Elegant and modern abayas for every occasion.';
-    } else if (this.category === 'dresses') {
-      return 'Beautiful long dresses with contemporary designs.';
-    } else if (this.category === 'pants') {
-      return 'Comfortable and stylish pants to complete your outfit.';
-    } else if (this.category === 'blouses') {
-      return 'Versatile blouses perfect for any day of the week.';
-    } else if (this.category === 'scarves') {
-      return 'Add the perfect finishing touch with our scarves collection.';
-    } else if (this.category === 'handbags') {
-      return 'Stylish handbags to complement your ensemble.';
-    } else if (this.category === 'shoes') {
-      return 'Complete your look with our elegant footwear selection.';
-    } else {
-      return "Discover our complete collection of women's fashion.";
-    }
   }
 
   loadProducts(): void {
     this.loading = true;
 
-    this.productService.getAllProducts().subscribe(this.handleProductsResponse.bind(this));
+    this.productService.getAllProducts().subscribe({
+      next: (productResponse) => {
+        this.products = productResponse;
+
+        this.handleProductsResponse(this.products);
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading products:', error);
+        this.loading = false;
+      },
+    });
   }
 
-  handleProductsResponse(products: Product[]): void {
+  loadProductsByCategory(category: string): void {
+    this.loading = true;
+    this.productService.getProductsByCategory([category]).subscribe({
+      next: (productResponse) => {
+        this.products = productResponse;
+
+        this.handleProductsResponse(this.products);
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading products by category:', error);
+        this.loading = false;
+      },
+    });
+  }
+
+  handleProductsResponse(products: RawProductPayload[]): void {
     this.products = products;
     this.applyFilters();
     this.loading = false;
@@ -148,19 +146,18 @@ export class ProductListComponent {
     result = result.filter((p) => p.price >= this.priceRange[0] && p.price <= this.priceRange[1]);
 
     // Apply color filter if any selected
-    if (this.selectedColors().length > 0) {
+    if (this.selectedColor().length > 0) {
       result = result.filter((p) => {
-        return p.colors?.some((color) => this.selectedColors().includes(color));
+        return p.color?.some((color) => this.selectedColor().includes(color));
       });
     }
 
     // Apply size filter if any selected
     if (this.selectedSizes().length > 0) {
       result = result.filter((p) => {
-        return p.sizes?.some((size) => this.selectedSizes().includes(size));
+        return p.size?.some((size) => this.selectedSizes().includes(size));
       });
     }
-    console.log('result', result);
 
     // Apply sorting
     this.applySorting(result);
@@ -172,7 +169,7 @@ export class ProductListComponent {
     this.filteredProducts = result.slice(startIndex, startIndex + this.pageSize);
   }
 
-  applySorting(products: Product[]): void {
+  applySorting(products: RawProductPayload[]): void {
     switch (this.selectedSortOption) {
       case 'price_asc':
         products.sort((a, b) => a.price - b.price);
@@ -198,12 +195,12 @@ export class ProductListComponent {
     this.applyFilters();
   }
   toggleColorFilter(color: string): void {
-    const currentColors = this.selectedColors();
+    const currentColor = this.selectedColor();
 
-    if (!currentColors.includes(color)) {
-      this.selectedColors.update((colors) => [...colors, color]);
+    if (!currentColor.includes(color)) {
+      this.selectedColor.update((colors) => [...colors, color]);
     } else {
-      this.selectedColors.update((colors) => colors.filter((c) => c !== color));
+      this.selectedColor.update((colors) => colors.filter((c) => c !== color));
     }
     this.currentPage = 1;
     this.applyFilters();
@@ -229,7 +226,7 @@ export class ProductListComponent {
 
   clearAllFilters(): void {
     this.priceRange = [0, 1000];
-    this.selectedColors.set([]);
+    this.selectedColor.set([]);
     this.selectedSizes.set([]);
     this.currentPage = 1;
     this.applyFilters();
@@ -239,13 +236,13 @@ export class ProductListComponent {
     return (
       this.priceRange[0] > 0 ||
       this.priceRange[1] < 1000 ||
-      this.selectedColors.length > 0 ||
+      this.selectedColor.length > 0 ||
       this.selectedSizes.length > 0
     );
   }
 
   addToCart(product: Product, quantity: number = 1): void {
-    this.cartService.addToCart(product, quantity);
+    // this.cartService.addToCart(product, quantity);
 
     // Use PrimeNG Toast service here if you want to show a notification
     console.log(`Added ${quantity} of ${product.name} to cart`);
@@ -253,17 +250,17 @@ export class ProductListComponent {
     this.quickViewVisible = false;
   }
 
-  quickView(product: Product): void {
+  quickView(product: RawProductPayload): void {
     this.selectedProduct = product;
     this.selectedQuantity = 1;
 
     // Set default selections if available
-    if (product.colors && product.colors.length > 0) {
-      this.selectedColor = product.colors[0];
+    if (product.color && product.color.length > 0) {
+      this.selectedColor.set([product.color[0]]);
     }
 
-    if (product.sizes && product.sizes.length > 0) {
-      this.selectedSize = product.sizes[0];
+    if (product.size && product.size.length > 0) {
+      this.selectedSize = product.size[0];
     }
 
     this.quickViewVisible = true;
