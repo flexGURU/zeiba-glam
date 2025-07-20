@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartService } from '../../../core/services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { DrawerModule } from 'primeng/drawer';
 import { LogoComponent } from '../../../core/components/logo/logo.component';
 
@@ -44,9 +44,10 @@ export class HeaderComponent {
     },
   ];
 
-  constructor(private cartService: CartService) {
-    this.cartService.cartItems$.subscribe((items) => {
-      this.cartItemCount = items.reduce((count, item) => count + item.quantity, 0);
-    });
-  }
+private cartService = inject(CartService);
+
+getTotalCartItems(): number {
+return this.cartService.getCartItems().reduce((total, item) => total + item.quantity, 0);
+}
+
 }

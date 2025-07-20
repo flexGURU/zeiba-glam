@@ -12,7 +12,7 @@ import { LandingComponent } from '../landing/landing.component';
     ProductListComponent,
     CarouselModule,
     CommonModule,
-    NewArrivalComponent,
+
     ProductCategoryComponent,
     LandingComponent,
   ],

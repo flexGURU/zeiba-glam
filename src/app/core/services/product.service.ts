@@ -8,11 +8,7 @@ import {
   RawProductPayload,
 } from '../interfaces/interfaces';
 import { environment } from '../../../environments/environment.development';
-
-export interface ProductCategory {
-  name: string;
-  image: string;
-}
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -49,31 +45,34 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
-  getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.productsUrl).pipe(catchError(this.handleError));
-  }
-
-  getProductCategories(): Observable<ProductCategory[]> {
-    const category = this.http.get<ProductCategory[]>(this.categoriesUrl);
-
-    return category.pipe(catchError(this.handleError));
-  }
-
-  getProductById(id: number): Observable<Product> {
-    return this.getAllProducts().pipe(
-      map((products) => {
-        const product = products.find((p) => p.id === id);
-        if (!product) {
-          throw new Error(`Product with id ${id} not found`);
-        }
-        return product;
-      }),
-      catchError(this.handleError)
+  getAllProducts(): Observable<RawProductPayload[]> {
+    return this.http.get<{ data: RawProductPayload[] }>(`${this.apiURL}/products`).pipe(
+      map((response) => {
+        return response.data;
+      })
     );
   }
 
-  getProductsByCategory(category: string): Observable<Product[]> {
-  return of([]); // Placeholder for actual implementation 
+  getProductById(id: number): Observable<RawProductPayload> {
+    return this.http.get<{ data: RawProductPayload }>(`${this.apiURL}/products/${id}`).pipe(
+      map((response) => {
+        return response.data;
+      })
+    );
+  }
+
+  getProductsByCategory(categories: string[]): Observable<RawProductPayload[]> {
+    let params = new HttpParams();
+
+    categories.forEach((category) => {
+      params = params.append('category', category);
+    });
+
+    return this.http.get<{ data: RawProductPayload[] }>(`${this.apiURL}/products`, { params }).pipe(
+      map((response) => {
+        return response.data;
+      })
+    );
   }
 
   private handleError(error: any) {

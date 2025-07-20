@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +15,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { OrderSummaryComponent } from "../order-summary/order-summary.component";
+import { OrderSummaryComponent } from '../order-summary/order-summary.component';
+import { CartItem, CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -30,8 +31,8 @@ import { OrderSummaryComponent } from "../order-summary/order-summary.component"
     ReactiveFormsModule,
     FormsModule,
     InputNumberModule,
-    OrderSummaryComponent
-],
+    OrderSummaryComponent,
+  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
   providers: [MessageService],
@@ -41,6 +42,8 @@ export class CheckoutComponent {
   orderItem: any = null;
   paymentMethod: string = 'mpesa';
   paymentForm: FormGroup;
+  cartItems: CartItem[] = [];
+  totalAmount: number = 0;
 
   // Customer details
   customerDetails = {
@@ -63,6 +66,8 @@ export class CheckoutComponent {
 
   loading: boolean = false;
 
+  private cartService = inject(CartService);
+
   constructor(
     private router: Router,
     private messageService: MessageService,
@@ -81,11 +86,9 @@ export class CheckoutComponent {
   }
 
   ngOnInit() {
-    // Redirect if no order item
-    if (this.orderItem) {
-      this.router.navigate(['/']);
-      return;
-    }
+    this.cartItems = this.cartService.getCartItems()
+    this.totalAmount = this.cartItems.reduce((acc, item) => acc + item.total, 0);
+
   }
 
   onPaymentMethodChange(method: string) {

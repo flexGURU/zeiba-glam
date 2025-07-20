@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../../../../core/services/cart.service';
+import { CartService } from '../../../../services/cart.service';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -12,7 +12,7 @@ import { TabsModule } from 'primeng/tabs';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { ProductRelatedComponent } from '../../product-related/product-related.component';
-import { Product } from '../../../../../core/interfaces/interfaces';
+import { Product, RawProductPayload } from '../../../../../core/interfaces/interfaces';
 import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
@@ -27,7 +27,6 @@ import { ProductService } from '../../../../../core/services/product.service';
     TabsModule,
     TabViewModule,
     ButtonModule,
-    ProductRelatedComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
@@ -35,10 +34,10 @@ import { ProductService } from '../../../../../core/services/product.service';
 })
 export class ProductDetailComponent {
   productId!: number;
-  product!: Product;
+  product!: RawProductPayload;
   selectedColor: string = '';
   selectedSize: string = '';
-  quantity: number = 1;
+  quantity = signal<number>(1);
   relatedProducts: Product[] = [];
 
   productService = inject(ProductService);
@@ -53,7 +52,6 @@ export class ProductDetailComponent {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.productId = params['product-id'];
-      console.log('product', typeof this.productId);
       this.getProductById(this.productId);
     });
 
@@ -88,13 +86,12 @@ export class ProductDetailComponent {
     this.relatedProducts = [];
   }
 
-  buyNow(): void {
-    this.addToCart();
-    this.router.navigate(['/checkout']);
-  }
+  totalAmount = computed(() => {
+    return this.quantity() * this.product.price;
+  });
 
   addToCart(): void {
-    if (!this.selectedSize && this.product.sizes && this.product.sizes.length > 0) {
+    if (!this.selectedSize && this.product.size && this.product.size.length > 0) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -103,7 +100,7 @@ export class ProductDetailComponent {
       return;
     }
 
-    if (!this.selectedColor && this.product.colors && this.product.colors.length > 0) {
+    if (!this.selectedColor && this.product.color && this.product.color.length > 0) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -114,10 +111,10 @@ export class ProductDetailComponent {
 
     const item = {
       product: this.product,
-      quantity: this.quantity,
+      quantity: this.quantity(),
       color: this.selectedColor,
       size: this.selectedSize,
-      total: this.product.price * this.quantity,
+      total: this.totalAmount(),
     };
 
     this.cartService.addToCart(item);
