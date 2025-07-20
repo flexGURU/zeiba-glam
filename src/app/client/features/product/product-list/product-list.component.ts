@@ -104,6 +104,7 @@ export class ProductListComponent {
     this.productService.getAllProducts().subscribe({
       next: (productResponse) => {
         this.products = productResponse;
+        
 
         this.handleProductsResponse(this.products);
 
