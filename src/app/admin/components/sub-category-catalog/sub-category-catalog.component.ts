@@ -107,7 +107,7 @@ export class SubCategoryCatalogComponent {
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
             if (subCategory.id) {
-              this.categoryService.deleteCategory(subCategory.id).subscribe({
+              this.subCategoryService.deleteSubCategory(subCategory.id).subscribe({
                 next: () => {
                   this.loadSubCategoriesByCategoryId();
                   this.messageService.add({
