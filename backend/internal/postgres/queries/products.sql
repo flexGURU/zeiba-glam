@@ -7,10 +7,10 @@ RETURNING *;
 SELECT * FROM products WHERE id = $1;
 
 -- name: GetProductsByCategory :many
-SELECT * FROM products WHERE category = $1;
+SELECT * FROM products WHERE deleted_at IS NULL AND category = $1;
 
 -- name: GetProductsBySubCategory :many
-SELECT * FROM products WHERE sub_category = $1;
+SELECT * FROM products WHERE deleted_at IS NULL AND sub_category = $1;
 
 -- name: UpdateProductCategory :exec
 UPDATE products

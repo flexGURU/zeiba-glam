@@ -99,7 +99,7 @@ func (q *Queries) GetProductByID(ctx context.Context, id int64) (Product, error)
 }
 
 const getProductsByCategory = `-- name: GetProductsByCategory :many
-SELECT id, name, description, price, category, image_url, size, color, stock_quantity, deleted_at, updated_by, created_at, sub_category FROM products WHERE category = $1
+SELECT id, name, description, price, category, image_url, size, color, stock_quantity, deleted_at, updated_by, created_at, sub_category FROM products WHERE deleted_at IS NULL AND category = $1
 `
 
 func (q *Queries) GetProductsByCategory(ctx context.Context, category string) ([]Product, error) {
@@ -137,7 +137,7 @@ func (q *Queries) GetProductsByCategory(ctx context.Context, category string) ([
 }
 
 const getProductsBySubCategory = `-- name: GetProductsBySubCategory :many
-SELECT id, name, description, price, category, image_url, size, color, stock_quantity, deleted_at, updated_by, created_at, sub_category FROM products WHERE sub_category = $1
+SELECT id, name, description, price, category, image_url, size, color, stock_quantity, deleted_at, updated_by, created_at, sub_category FROM products WHERE deleted_at IS NULL AND sub_category = $1
 `
 
 func (q *Queries) GetProductsBySubCategory(ctx context.Context, subCategory string) ([]Product, error) {
